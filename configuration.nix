@@ -8,11 +8,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    # include NixOS-WSL modules
-    <nixos-wsl/modules>
-  ];
-
   wsl.enable = true;
   wsl.defaultUser = "pjjimiso";
 
@@ -32,5 +27,8 @@
     git
     tmux
     tmuxinator
+    neovim
   ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
