@@ -12,6 +12,12 @@
     fi
   '';
 
+  programs.zoxide = {
+    enable = true;
+    enableBashIntegration = true;
+    options = [ "--cmd cd" ];
+  };
+
   # Proxy environment variables for corporate network
   home.sessionVariables = lib.mkIf corporate {
     http_proxy = "http://proxy-chain.intel.com:912";
