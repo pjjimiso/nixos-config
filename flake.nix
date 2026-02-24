@@ -10,13 +10,19 @@
   };
 
   outputs = { self, nixpkgs, nixos-wsl, ... }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         nixos-wsl.nixosModules.wsl
-        ./configuration.nix
+        ./hosts/wsl/configuration.nix
+      ];
+    };
+
+    nixosConfigurations.legion = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hosts/legion/configuration.nix
       ];
     };
   };
 }
-
