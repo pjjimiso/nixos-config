@@ -34,6 +34,9 @@
     extraGroups = [ "wheel" "networkmanager" ];
   };
 
+  home-manager.extraSpecialArgs = { corporate = false; };
+  home-manager.users.pjjimiso = import ../../home/default.nix;
+
   # This value should match the NixOS release used during installation.
   # Check /etc/nixos/configuration.nix on the laptop if unsure.
   system.stateVersion = "25.05";
