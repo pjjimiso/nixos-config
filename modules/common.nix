@@ -7,6 +7,7 @@
     tmux
     tmuxinator
     neovim
+    gcc
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
