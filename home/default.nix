@@ -37,12 +37,14 @@
     tmux
     tmuxinator
     neovim
+    bash-completion
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
   # Bash aliases
   programs.bash = {
     enable = true;
+    enableCompletion = true;
     shellAliases = {
       vim = "nvim";
       mux = "tmuxinator";
