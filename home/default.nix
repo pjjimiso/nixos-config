@@ -24,6 +24,7 @@
     fi
   '';
 
+  # Home-manager packages
   home.packages = with pkgs; [
     git
     tmux
@@ -32,6 +33,7 @@
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
+  # Bash aliases
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -40,16 +42,20 @@
     };
   };
 
+  # Zoxide
   programs.zoxide = {
     enable = true;
     enableBashIntegration = true;
     options = [ "--cmd cd" ];
   };
 
-  # Proxy environment variables for corporate network
-  home.sessionVariables = lib.mkIf corporate {
-    http_proxy = "http://proxy-chain.intel.com:912";
-    https_proxy = "http://proxy-chain.intel.com:912";
-    no_proxy = "127.0.0.1,localhost,intel.com";
-  };
+  # Environment variables
+  home.sessionVariables = lib.mkMerge [
+    { EDITOR = "nvim"; }
+    (lib.mkIf corporate {
+      http_proxy = "http://proxy-chain.intel.com:912";
+      https_proxy = "http://proxy-chain.intel.com:912";
+      no_proxy = "127.0.0.1,localhost,intel.com";
+    })
+  ];
 }
