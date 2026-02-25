@@ -3,10 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     vim
-    git
-    tmux
-    tmuxinator
-    neovim
     gcc
   ];
 
