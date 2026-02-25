@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -34,7 +34,7 @@
     extraGroups = [ "wheel" "networkmanager" ];
   };
 
-  home-manager.extraSpecialArgs = { corporate = false; };
+  home-manager.extraSpecialArgs = { inherit inputs; corporate = false; };
   home-manager.users.pjjimiso = import ../../home/default.nix;
 
   # This value should match the NixOS release used during installation.

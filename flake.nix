@@ -11,11 +11,16 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... }: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... }@inputs: {
     nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
       modules = [
         nixos-wsl.nixosModules.wsl
         home-manager.nixosModules.home-manager
@@ -25,6 +30,7 @@
 
     nixosConfigurations.legion = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
       modules = [
         home-manager.nixosModules.home-manager
         ./hosts/legion/configuration.nix
@@ -34,12 +40,12 @@
     homeConfigurations = {
       corporate = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = { corporate = true; };
+        extraSpecialArgs = { inherit inputs; corporate = true; };
         modules = [ ./home/default.nix ];
       };
       personal = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = { corporate = false; };
+        extraSpecialArgs = { inherit inputs; corporate = false; };
         modules = [ ./home/default.nix ];
       };
     };

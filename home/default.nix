@@ -1,4 +1,4 @@
-{ pkgs, lib, corporate ? false, ... }:
+{ pkgs, lib, inputs, corporate ? false, ... }:
 
 {
   home.username = "pjjimiso";
@@ -11,6 +11,10 @@
       ${pkgs.git}/bin/git clone https://github.com/pjjimiso/kickstart.nvim $HOME/.config/nvim
     fi
   '';
+
+  home.packages = [
+    inputs.claude-code.packages.${pkgs.system}.default
+  ];
 
   programs.bash.enable = true;
 
