@@ -32,7 +32,13 @@
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
-  programs.bash.enable = true;
+  programs.bash = {
+    enable = true;
+    shellAliases = {
+      vim = "nvim";
+      mux = "tmuxinator";
+    };
+  };
 
   programs.zoxide = {
     enable = true;
