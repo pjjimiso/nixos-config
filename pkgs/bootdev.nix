@@ -8,10 +8,10 @@ buildGoModule rec {
     owner = "bootdotdev";
     repo = "bootdev";
     rev = "v${version}";
-    hash = lib.fakeHash;
+    hash = "sha256-/vVT2daJCxJDmJr9Xi27POCAKURCS171ORb7UJp/CqU=";
   };
 
-  vendorHash = lib.fakeHash;
+  vendorHash = "sha256-ZDioEU5uPCkd+kC83cLlpgzyOsnpj2S7N+lQgsQb8uY=";
 
   meta = {
     description = "The official Boot.dev CLI client";
