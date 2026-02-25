@@ -24,9 +24,16 @@
     fi
   '';
 
+  # Git configuration
+  programs.git = {
+    enable = true;
+    extraConfig = {
+      credential.helper = "store";
+    };
+  };
+
   # Home-manager packages
   home.packages = with pkgs; [
-    git
     tmux
     tmuxinator
     neovim
