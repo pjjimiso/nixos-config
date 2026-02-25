@@ -17,37 +17,42 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... }@inputs: {
-    nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        nixos-wsl.nixosModules.wsl
-        home-manager.nixosModules.home-manager
-        ./hosts/wsl/configuration.nix
-      ];
-    };
-
-    nixosConfigurations.legion = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        home-manager.nixosModules.home-manager
-        ./hosts/legion/configuration.nix
-      ];
-    };
-
-    homeConfigurations = {
-      corporate = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = { inherit inputs; corporate = true; };
-        modules = [ ./home/default.nix ];
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... }@inputs:
+    let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in {
+      nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          nixos-wsl.nixosModules.wsl
+          home-manager.nixosModules.home-manager
+          ./hosts/wsl/configuration.nix
+        ];
       };
-      personal = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = { inherit inputs; corporate = false; };
-        modules = [ ./home/default.nix ];
+
+      nixosConfigurations.legion = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          home-manager.nixosModules.home-manager
+          ./hosts/legion/configuration.nix
+        ];
       };
+
+      homeConfigurations = {
+        corporate = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit inputs; corporate = true; };
+          modules = [ ./home/default.nix ];
+        };
+        personal = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit inputs; corporate = false; };
+          modules = [ ./home/default.nix ];
+        };
+      };
+
+      packages.x86_64-linux.bootdev = pkgs.callPackage ./pkgs/bootdev.nix { };
     };
-  };
 }
