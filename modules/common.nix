@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     vim
     gcc
+    go
     ripgrep
     fd
   ];
