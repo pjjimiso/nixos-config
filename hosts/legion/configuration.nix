@@ -31,7 +31,7 @@
   # User account
   users.users.pjjimiso = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "docker" ];
   };
 
   home-manager.extraSpecialArgs = { inherit inputs; corporate = false; };
