@@ -48,7 +48,7 @@
     shellAliases = {
       vim = "nvim";
       mux = "tmuxinator";
-      bdshell = "nix shell $HOME/nixos-config#bootdev"
+      bdshell = "nix shell $HOME/nixos-config#bootdev";
     };
   };
 
