@@ -17,6 +17,11 @@
 
   home.file.".config/tmux/tmux.conf.local".source = ./tmux/tmux.conf.local;
 
+  home.file.".local/bin/tmux-kill-session.sh" = {
+    source = ./tmux/tmux-kill-session.sh;
+    executable = true;
+  };
+
   # Clone Neovim config if not already present
   home.activation.cloneNvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.config/nvim" ]; then
