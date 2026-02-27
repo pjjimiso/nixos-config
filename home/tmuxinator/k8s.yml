@@ -1,0 +1,16 @@
+# /home/pjjimiso/.config/tmuxinator/k8s.yml
+
+name: k8s
+root: ~/Projects/bootdotdev/k8s
+
+windows:
+  - editor:
+      layout: even-horizontal
+      panes:
+        - nvim:
+          - vim
+        - git: 
+          - git status
+  - README:
+      panes:
+        - vim README.md

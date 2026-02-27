@@ -1,0 +1,17 @@
+# /home/pjjimiso/.config/tmuxinator/chezmoi.yml
+
+name: chezmoi
+root: ~/
+
+windows:
+  - chezmoi:
+      layout: main-vertical
+      panes:
+        - readme:
+          - chezmoi cd 
+          - cat README.md
+        - managed:
+          - chezmoi managed
+        - git: 
+          - chezmoi cd
+          - git status

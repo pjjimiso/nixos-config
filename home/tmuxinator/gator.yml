@@ -1,0 +1,22 @@
+# /home/pjjimiso/.config/tmuxinator/gator.yml
+
+name: gator
+root: ~/Projects/bootdotdev/gator
+
+windows:
+  - editor:
+      layout: even-horizontal
+      panes:
+        - nvim:
+          - vim
+        - git: 
+          - git status
+  - go:
+      panes:
+        - ls -la
+  - psql:
+      panes:
+        - psql "postgres://postgres:postgres@localhost:5432/gator"
+  - README:
+      panes:
+        - vim README.md

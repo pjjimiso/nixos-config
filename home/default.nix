@@ -15,13 +15,6 @@
     fi
   '';
 
-  home.file.".config/tmux/tmux.conf.local".source = ./tmux/tmux.conf.local;
-
-  home.file.".local/bin/tmux-kill-session.sh" = {
-    source = ./tmux/tmux-kill-session.sh;
-    executable = true;
-  };
-
   # Clone Neovim config if not already present
   home.activation.cloneNvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.config/nvim" ]; then
@@ -29,11 +22,28 @@
     fi
   '';
 
+  home.file = lib.mkMerge [
+    {
+      ".config/tmux/tmux.conf.local".source         = ./tmux/tmux.conf.local;
+      ".local/bin/tmux-kill-session.sh"             = { source = ./tmux/tmux-kill-session.sh; executable = true; };
+      ".local/bin/next_launch.sh"                   = { source = ./tmux/next_launch.sh;       executable = true; };
+    }
+    (lib.mapAttrs'
+      (name: _: lib.nameValuePair ".config/tmuxinator/${name}" { source = ./tmuxinator + "/${name}"; })
+      (lib.filterAttrs
+        (name: type: type == "regular" && lib.hasSuffix ".yml" name)
+        (builtins.readDir ./tmuxinator)))
+  ];
+
   # Git configuration
   programs.git = {
     enable = true;
+    userName  = "Patrick Jimison";
+    userEmail = "pat.jimison@gmail.com";
     extraConfig = {
       credential.helper = "store";
+      "credential \"https://github.com\"".helper      = [ "" "!gh auth git-credential" ];
+      "credential \"https://gist.github.com\"".helper = [ "" "!gh auth git-credential" ];
     };
   };
 
@@ -43,16 +53,26 @@
     tmuxinator
     neovim
     bash-completion
+    gh
+    btop
+    uv
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
-  # Bash aliases
+  # Bash
   programs.bash = {
     enable = true;
     enableCompletion = true;
     shellAliases = {
-      vim = "nvim";
-      mux = "tmuxinator";
+      vim     = "nvim";
+      mux     = "tmuxinator";
+      ls      = "ls --color=auto";
+      ll      = "ls -lA --color";
+      grep    = "grep --color=auto";
+      fgrep   = "fgrep --color=auto";
+      egrep   = "egrep --color=auto";
+      tmux    = "tmux -2";
+      python  = "python3";
       bdshell = "nix shell $HOME/nixos-config#bootdev";
     };
   };

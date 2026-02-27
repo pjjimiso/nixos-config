@@ -1,0 +1,11 @@
+# /home/pjjimiso/.config/tmuxinator/development.yml
+
+name: development
+root: ~/Projects/tmux_scripting/devproject
+windows:
+  - editor:
+      layout: main-horizontal
+      panes:
+        - vim
+        - #empty, just bash
+  - console: #empty, just bash
