@@ -5,6 +5,7 @@
 
   wsl.enable = true;
   wsl.defaultUser = "pjjimiso";
+  wsl.wslConf.network.generateHosts = false;
 
   users.users.pjjimiso.extraGroups = [ "docker" ];
 
