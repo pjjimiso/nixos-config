@@ -16,7 +16,7 @@
   # Cinnamon desktop environment
   services.xserver.enable = true;
   services.xserver.desktopManager.cinnamon.enable = true;
-  services.displayManager.lightdm.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
 
   # Audio
   hardware.pulseaudio.enable = false;
