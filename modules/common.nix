@@ -9,6 +9,8 @@
     fd
   ];
 
+  time.timeZone = "America/Phoenix";
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   networking.hosts = {
