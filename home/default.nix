@@ -56,6 +56,8 @@
     gh
     btop
     uv
+    _1password
+    _1password-gui
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
