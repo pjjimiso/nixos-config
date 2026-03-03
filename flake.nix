@@ -15,9 +15,10 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, ... }@inputs:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in {
@@ -35,6 +36,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          nixos-hardware.nixosModules.lenovo-legion-16iax10h
           home-manager.nixosModules.home-manager
           ./hosts/legion/configuration.nix
         ];
