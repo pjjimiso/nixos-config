@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, corporate ? false, ... }:
+{ pkgs, lib, config, inputs, corporate ? false, ... }:
 
 {
   home.username = "pjjimiso";
@@ -34,6 +34,32 @@
         (name: type: type == "regular" && lib.hasSuffix ".yml" name)
         (builtins.readDir ./tmuxinator)))
   ];
+
+  # sops-nix secrets
+  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  sops.defaultSopsFile = ../secrets/secrets.yaml;
+  sops.secrets.github_pat = {};
+
+  # Authenticate gh CLI after sops-nix has decrypted the PAT
+  systemd.user.services.gh-auth = {
+    Unit = {
+      Description = "Authenticate gh CLI with GitHub PAT";
+      After = [ "sops-nix.service" ];
+      Requires = [ "sops-nix.service" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "gh-auth" ''
+        if ! ${pkgs.gh}/bin/gh auth status &>/dev/null; then
+          ${pkgs.gh}/bin/gh auth login --with-token < ${config.sops.secrets.github_pat.path}
+        fi
+      '';
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
 
   # Git configuration
   programs.git = {

@@ -16,9 +16,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, ... }@inputs:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in {
@@ -28,6 +32,7 @@
         modules = [
           nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
+          sops-nix.homeManagerModules.sops
           ./hosts/wsl/configuration.nix
         ];
       };
@@ -38,6 +43,7 @@
         modules = [
           nixos-hardware.nixosModules.lenovo-legion-16iax10h
           home-manager.nixosModules.home-manager
+          sops-nix.homeManagerModules.sops
           ./hosts/legion/configuration.nix
         ];
       };
@@ -46,12 +52,12 @@
         corporate = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; corporate = true; };
-          modules = [ ./home/default.nix ];
+          modules = [ sops-nix.homeManagerModules.sops ./home/default.nix ];
         };
         personal = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; corporate = false; };
-          modules = [ ./home/default.nix ];
+          modules = [ sops-nix.homeManagerModules.sops ./home/default.nix ];
         };
       };
 

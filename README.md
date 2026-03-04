@@ -27,11 +27,31 @@ nixos-config/
 | `legion` | Lenovo Legion running NixOS with Cinnamon |
 
 
+## Bootstrap New Machine
+After installing NixOS, clone the repo
+```
+nix shell nixpkgs#git --command git clone https://github.com/pjjimiso/nixos-config ~/nixos-config
+```
+
+Rebuild 
+```
+sudo nixos-rebuild switch --flake .#hostname
+```
+
+Add git token to gh auth
+```
+mkdir -p ~/.config/sops/age
+bw login && bw get notes "nixos-age-key" > ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+sudo nixos-rebuild switch --flake .#hostname
+```
+After that, gh should authenticate automatically on every login
+
 ## Usage
 
 ### NixOS machines
 
-Apply configuration on the WSL:
+Apply configuration on WSL:
 
 ```bash
 sudo nixos-rebuild switch --flake .#wsl
