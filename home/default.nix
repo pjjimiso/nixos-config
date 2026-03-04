@@ -26,7 +26,7 @@
     {
       ".config/tmux/tmux.conf.local".source         = ./tmux/tmux.conf.local;
       ".local/bin/tmux-kill-session.sh"             = { source = ./tmux/tmux-kill-session.sh; executable = true; };
-      ".local/bin/next_launch.sh"                   = { source = ./tmux/next_launch.sh;       executable = true; };
+      ".local/bin/liftoff-linux-amd64"              = { source = ./tmux/liftoff-linux-amd64; executable = true; };
     }
     (lib.mapAttrs'
       (name: _: lib.nameValuePair ".config/tmuxinator/${name}" { source = ./tmuxinator + "/${name}"; })
