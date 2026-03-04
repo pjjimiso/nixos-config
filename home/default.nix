@@ -85,6 +85,7 @@
     bitwarden-cli
     bitwarden
     inputs.claude-code.packages.${pkgs.system}.default
+    inputs.liftoff.packages.x86_64-linux.default
   ];
 
   # Bash

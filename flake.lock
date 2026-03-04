@@ -76,6 +76,26 @@
         "type": "github"
       }
     },
+    "liftoff": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772660386,
+        "narHash": "sha256-hdDnwN1GoCmeHNoEz3iiJbu28Ampqz0JW4Ci5uv81As=",
+        "owner": "pjjimiso",
+        "repo": "liftoff",
+        "rev": "3551cf42377f651a380c5969e7e8e166e99e62fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pjjimiso",
+        "repo": "liftoff",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1771969195,
@@ -134,6 +154,7 @@
       "inputs": {
         "claude-code": "claude-code",
         "home-manager": "home-manager",
+        "liftoff": "liftoff",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
