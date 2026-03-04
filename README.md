@@ -51,13 +51,13 @@ After that, gh should authenticate automatically on every login
 
 ### NixOS machines
 
-Apply configuration on WSL:
+Rebuild WSL
 
 ```bash
 sudo nixos-rebuild switch --flake .#wsl
 ```
 
-Apply configuration on the Legion:
+Rebuild Legion
 
 ```bash
 sudo nixos-rebuild switch --flake .#legion

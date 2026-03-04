@@ -32,7 +32,7 @@
         modules = [
           nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
-          sops-nix.homeManagerModules.sops
+          { home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ]; }
           ./hosts/wsl/configuration.nix
         ];
       };
@@ -43,7 +43,7 @@
         modules = [
           nixos-hardware.nixosModules.lenovo-legion-16iax10h
           home-manager.nixosModules.home-manager
-          sops-nix.homeManagerModules.sops
+          { home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ]; }
           ./hosts/legion/configuration.nix
         ];
       };
