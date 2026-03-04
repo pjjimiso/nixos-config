@@ -56,8 +56,8 @@
     gh
     btop
     uv
-    _1password
-    _1password-gui
+    bitwarden-cli
+    bitwarden
     inputs.claude-code.packages.${pkgs.system}.default
   ];
 
