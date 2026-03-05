@@ -415,7 +415,7 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 # # /!\ do not "uncomment" the functions: the leading "# " characters are needed
 #
 # launch() {
-#   ~/.local/bin/liftoff-linux-amd64 2>/dev/null
+#   liftoff 2>/dev/null
 # }
 #
 # weather() {
