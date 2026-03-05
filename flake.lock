@@ -83,11 +83,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772660386,
-        "narHash": "sha256-hdDnwN1GoCmeHNoEz3iiJbu28Ampqz0JW4Ci5uv81As=",
+        "lastModified": 1772730227,
+        "narHash": "sha256-H1V6PyJqAkTvuirILUQR7Zdxlvi1THfJAWoOVBGcI4k=",
         "owner": "pjjimiso",
         "repo": "liftoff",
-        "rev": "3551cf42377f651a380c5969e7e8e166e99e62fe",
+        "rev": "061fa957495a9a277fdc55f8511f6dd07155be98",
         "type": "github"
       },
       "original": {
