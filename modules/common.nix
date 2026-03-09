@@ -7,6 +7,7 @@
     go
     ripgrep
     fd
+    xclip
   ];
 
   time.timeZone = "America/Phoenix";
