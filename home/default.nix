@@ -92,6 +92,7 @@
   programs.bash = {
     enable = true;
     enableCompletion = true;
+    historyControl = [ "ignoredups" ];
     shellAliases = {
       vim     = "nvim";
       mux     = "tmuxinator";
