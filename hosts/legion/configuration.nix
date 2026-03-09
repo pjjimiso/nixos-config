@@ -56,6 +56,13 @@
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    # Force PRIME (Hybrid Intel + Nvidia GPU) to use sync instead of offload
+    prime = {
+      offload.enable = lib.mkForce false;
+      offload.enableOffloadCmd = lib.mkForce false;
+      sync.enable = true;
+    };
   };
 
   # Audio
