@@ -99,4 +99,7 @@
   };
 
   services.flatpak.enable = true;
+
+  # Do not suspend/hibernate when closing laptop lid
+  services.logind.lidSwitch = "ignore";
 }
