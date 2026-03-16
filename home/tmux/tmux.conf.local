@@ -355,6 +355,12 @@ bind C-x run-shell "~/.local/bin/tmux-kill-session.sh"
 # Skip the "kill pane 1? (y/n)" prompt
 bind-key x kill-pane 
 
+# move window left or right (prefix > > and prefix < <)
+bind > switch-client -T move-right
+bind -T move-right > swap-window -d -t +1
+bind < switch-client -T move-left
+bind -T move-left < swap-window -d -t -1
+
 # Don't exit from tmux when closing a session
 set -g detach-on-destroy off
 
