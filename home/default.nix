@@ -87,9 +87,8 @@
           set -g @powerkit_status_position "bottom"
           set -g @powerkit_theme "tokyo-night"
           set -g @powerkit_theme_variant "night"
-          set -g @powerkit_transparent "true"
-          set -g @powerkit_datetime_format "%m-%d"
-          set -g @powerkit_plugins "uptime,datetime,hostname,battery,external(\"\"|\"$(liftoff 2>/dev/null)\"|\"info-base\"|\"info-base-lighter\"|\"300\")"
+          set -g @powerkit_plugin_datetime_format "%H:%M %m/%d"
+          set -g @powerkit_plugins "external(\"\"|\"$(liftoff 2>/dev/null)\"|\"info-base\"|\"info-base-lighter\"|\"300\"),datetime,group(hostname,cpu,memory,battery,uptime)"
         '';
       }
       {
@@ -166,6 +165,9 @@
 
       # Session behavior
       set -g detach-on-destroy off
+
+      # Reload source-file
+      bind r source-file ~/.config/tmux/tmux.conf \; display-message "Tmux config reloaded"
 
       # General settings
       set -sg repeat-time 600
