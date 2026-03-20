@@ -64,15 +64,21 @@
     inputs.liftoff.packages.x86_64-linux.default
   ];
 
+  home.file.".local/bin/tmux-kill-session.sh" = {
+    source = ./tmux/tmux-kill-session.sh;
+    executable = true;
+  };
+
   # Tmux
   programs.tmux = {
     enable = true;
+    prefix = "C-a";
     terminal = "screen-256color";
     historyLimit = 50000;
     baseIndex = 1;
     mouse = false;
     keyMode = "vi";
-    escapeTime = 10;
+    escapeTime = 0;
     disableConfirmationPrompt = true;
     plugins = [
       {
@@ -87,6 +93,78 @@
         '';
       }
     ];
+    extraConfig = ''
+      # Secondary prefix
+      set -g prefix2 C-b
+      bind C-b send-prefix -2
+
+      # Session management
+      bind C-c new-session
+      bind C-c command-prompt -p "New session name:" "new-session -s '%%'"
+      bind BTab switch-client -l
+
+      # Window/pane creation retaining current path
+      bind c new-window -c "#{pane_current_path}"
+      bind '"' split-window -v -c "#{pane_current_path}"
+      bind '%' split-window -h -c "#{pane_current_path}"
+      bind - split-window -v -c "#{pane_current_path}"
+      bind _ split-window -h -c "#{pane_current_path}"
+
+      # Pane navigation (vim-style)
+      bind -r h select-pane -L
+      bind -r j select-pane -D
+      bind -r k select-pane -U
+      bind -r l select-pane -R
+
+      # Pane resizing
+      bind -r H resize-pane -L 2
+      bind -r J resize-pane -D 2
+      bind -r K resize-pane -U 2
+      bind -r L resize-pane -R 2
+
+      # Window navigation
+      bind -r C-h previous-window
+      bind -r C-l next-window
+      bind Tab last-window
+
+      # Window movement (prefix > > and prefix < <)
+      bind > switch-client -T move-right
+      bind -T move-right > swap-window -d -t +1
+      bind < switch-client -T move-left
+      bind -T move-left < swap-window -d -t -1
+
+      # Copy mode
+      bind Enter copy-mode
+      bind -T copy-mode-vi v send -X begin-selection
+      bind -T copy-mode-vi C-v send -X rectangle-toggle
+      bind -T copy-mode-vi y send -X copy-selection-and-cancel
+      bind -T copy-mode-vi Escape send -X cancel
+      bind -T copy-mode-vi H send -X start-of-line
+      bind -T copy-mode-vi L send -X end-of-line
+
+      # Buffer management
+      bind b list-buffers
+      bind p paste-buffer -p
+      bind P choose-buffer
+
+      # Custom: kill session and switch to next
+      bind C-x run-shell "~/.local/bin/tmux-kill-session.sh"
+
+      # Session behavior
+      set -g detach-on-destroy off
+
+      # General settings
+      set -sg repeat-time 600
+      set -s focus-events on
+      setw -g automatic-rename on
+      set -g renumber-windows on
+      set -g set-titles on
+      set -g display-panes-time 800
+      set -g display-time 4000
+      set -g status-interval 5
+      set -g monitor-activity on
+      set -g visual-activity off
+    '';
   };
 
   # Bash
