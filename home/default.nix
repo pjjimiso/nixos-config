@@ -83,7 +83,7 @@
           set -g @powerkit_theme_variant "night"
           set -g @powerkit_transparent "true"
           set -g @powerkit_datetime_format "%m-%d"
-          set -g @powerkit_plugins "uptime,datetime,hostname,battery"
+          set -g @powerkit_plugins "uptime,datetime,hostname,battery,external(\"\"|\"$(liftoff 2>/dev/null)\"|\"info-base\"|\"info-base-lighter\"|\"300\")"
         '';
       }
     ];
