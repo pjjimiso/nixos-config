@@ -158,7 +158,8 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "tmux-config": "tmux-config"
       }
     },
     "sops-nix": {
@@ -193,6 +194,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tmux-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773942538,
+        "narHash": "sha256-HQDwKo+O9sCYTTftrcbEGSrQsSkXmOcagi0CPUCTjrU=",
+        "owner": "pjjimiso",
+        "repo": "tmux-config",
+        "rev": "024f907f13d0b73506a168b8e50333d932a24f7a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pjjimiso",
+        "repo": "tmux-config",
         "type": "github"
       }
     }

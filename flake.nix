@@ -24,6 +24,10 @@
       url = "github:pjjimiso/liftoff";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    tmux-config = {
+      url = "github:pjjimiso/tmux-config";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, ... }@inputs:

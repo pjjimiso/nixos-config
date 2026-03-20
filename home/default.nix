@@ -5,16 +5,6 @@
   home.homeDirectory = "/home/pjjimiso";
   home.stateVersion = "25.05";
 
-  # Clone oh-my-tmux if not already present
-  home.activation.cloneOhMyTmux = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -f "$HOME/.config/tmux/tmux.conf" ]; then
-      $DRY_RUN_CMD mkdir -p $HOME/.config/tmux
-      $DRY_RUN_CMD ${pkgs.git}/bin/git clone https://github.com/gpakosz/.tmux.git /tmp/oh-my-tmux
-      $DRY_RUN_CMD cp /tmp/oh-my-tmux/.tmux.conf $HOME/.config/tmux/tmux.conf
-      $DRY_RUN_CMD rm -rf /tmp/oh-my-tmux
-    fi
-  '';
-
   # Clone Neovim config if not already present
   home.activation.cloneNvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.config/nvim" ]; then
@@ -22,18 +12,15 @@
     fi
   '';
 
-  home.file = lib.mkMerge [
-    {
-      ".config/tmux/tmux.conf.local".source         = ./tmux/tmux.conf.local;
-      ".local/bin/tmux-kill-session.sh"             = { source = ./tmux/tmux-kill-session.sh; executable = true; };
-      ".local/bin/liftoff-linux-amd64"              = { source = ./tmux/liftoff-linux-amd64; executable = true; };
-    }
-    (lib.mapAttrs'
-      (name: _: lib.nameValuePair ".config/tmuxinator/${name}" { source = ./tmuxinator + "/${name}"; })
-      (lib.filterAttrs
-        (name: type: type == "regular" && lib.hasSuffix ".yml" name)
-        (builtins.readDir ./tmuxinator)))
-  ];
+  # Use tmux-config git repo
+  xdg.configFile = {
+    "tmux/tmux.conf".source = "${inputs.tmux-config}/tmux.conf";
+    "tmux/tmux.conf.local".source = "${inputs.tmux-config}/tmux.conf.local";
+    "tmux/tmux-kill-session.sh" = {
+      source = "${inputs.tmux-config}/tmux-kill-session.sh";
+      executable = true;
+    };
+  };
 
   # sops-nix secrets
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
