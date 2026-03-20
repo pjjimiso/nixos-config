@@ -92,6 +92,20 @@
           set -g @powerkit_plugins "uptime,datetime,hostname,battery,external(\"\"|\"$(liftoff 2>/dev/null)\"|\"info-base\"|\"info-base-lighter\"|\"300\")"
         '';
       }
+      {
+        plugin = pkgs.tmuxPlugins.resurrect;
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+        '';
+      }
+      pkgs.tmuxPlugins.yank
+      pkgs.tmuxPlugins.vim-tmux-navigator
+      {
+        plugin = pkgs.tmuxPlugins.t-smart-tmux-session-manager;
+        extraConfig = ''
+          set -g @t-fzf-find-binding 'ctrl-f:reload(fd -H -d 2 -t d . ~)'
+        '';
+      }
     ];
     extraConfig = ''
       # Secondary prefix
