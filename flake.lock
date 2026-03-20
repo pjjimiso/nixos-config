@@ -159,7 +159,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "sops-nix": "sops-nix",
-        "tmux-config": "tmux-config"
+        "tmux-powerkit": "tmux-powerkit"
       }
     },
     "sops-nix": {
@@ -197,19 +197,23 @@
         "type": "github"
       }
     },
-    "tmux-config": {
-      "flake": false,
+    "tmux-powerkit": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1773942538,
-        "narHash": "sha256-HQDwKo+O9sCYTTftrcbEGSrQsSkXmOcagi0CPUCTjrU=",
-        "owner": "pjjimiso",
-        "repo": "tmux-config",
-        "rev": "024f907f13d0b73506a168b8e50333d932a24f7a",
+        "lastModified": 1773946108,
+        "narHash": "sha256-V+26coqIRJw9/zHQBuKvCpuMzj2wPv8zNKZuUoX0vbo=",
+        "owner": "fabioluciano",
+        "repo": "tmux-powerkit",
+        "rev": "28c26d855082d32ac2263123e3266c03679cfc11",
         "type": "github"
       },
       "original": {
-        "owner": "pjjimiso",
-        "repo": "tmux-config",
+        "owner": "fabioluciano",
+        "repo": "tmux-powerkit",
         "type": "github"
       }
     }

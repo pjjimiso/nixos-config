@@ -12,16 +12,6 @@
     fi
   '';
 
-  # Use tmux-config git repo
-  xdg.configFile = {
-    "tmux/tmux.conf".source = "${inputs.tmux-config}/tmux.conf";
-    "tmux/tmux.conf.local".source = "${inputs.tmux-config}/tmux.conf.local";
-    "tmux/tmux-kill-session.sh" = {
-      source = "${inputs.tmux-config}/tmux-kill-session.sh";
-      executable = true;
-    };
-  };
-
   # sops-nix secrets
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
   sops.defaultSopsFile = ../secrets/secrets.yaml;
@@ -62,7 +52,6 @@
 
   # Home-manager packages
   home.packages = with pkgs; [
-    tmux
     tmuxinator
     neovim
     bash-completion
@@ -74,6 +63,31 @@
     inputs.claude-code.packages.${pkgs.system}.default
     inputs.liftoff.packages.x86_64-linux.default
   ];
+
+  # Tmux
+  programs.tmux = {
+    enable = true;
+    terminal = "screen-256color";
+    historyLimit = 50000;
+    baseIndex = 1;
+    mouse = false;
+    keyMode = "vi";
+    escapeTime = 10;
+    disableConfirmationPrompt = true;
+    plugins = [
+      {
+        plugin = inputs.tmux-powerkit.packages.${pkgs.system}.default;
+        extraConfig = ''
+          set -g @powerkit_status_position "bottom"
+          set -g @powerkit_theme "tokyo-night"
+          set -g @powerkit_theme_variant "night"
+          set -g @powerkit_transparent "true"
+          set -g @powerkit_datetime_format "%m-%d"
+          set -g @powerkit_plugins "uptime,datetime,hostname,battery"
+        '';
+      }
+    ];
+  };
 
   # Bash
   programs.bash = {
