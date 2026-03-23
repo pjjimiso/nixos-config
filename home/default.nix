@@ -69,6 +69,14 @@
     executable = true;
   };
 
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      theme = "tokyonight_night";
+    };
+  };
+
+
   # Tmux
   programs.tmux = {
     enable = true;

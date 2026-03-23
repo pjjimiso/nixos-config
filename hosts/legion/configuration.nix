@@ -84,6 +84,7 @@
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = { inherit inputs; corporate = false; };
   home-manager.users.pjjimiso = import ../../home/default.nix;
+  home-manager.backupFileExtension = ".bak";
 
   # This value should match the NixOS release used during installation.
   # Check /etc/nixos/configuration.nix on the laptop if unsure.
