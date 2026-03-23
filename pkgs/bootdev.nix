@@ -2,13 +2,13 @@
 
 buildGoModule rec {
   pname = "bootdev";
-  version = "1.26.0";
+  version = "1.27.4";
 
   src = fetchFromGitHub {
     owner = "bootdotdev";
     repo = "bootdev";
     rev = "v${version}";
-    hash = "sha256-hr8mqnX4mv6P8WpXCpP678lLUaanUu6X4jL5GJeBdzo=";
+    hash = "sha256-9avSkYxXqwaLCJeNTJJG8biEVUwZVYRauZclw8wbd50=";
   };
 
   vendorHash = "sha256-ZDioEU5uPCkd+kC83cLlpgzyOsnpj2S7N+lQgsQb8uY=";
