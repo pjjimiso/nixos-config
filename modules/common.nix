@@ -8,6 +8,7 @@
     ripgrep
     fd
     xclip
+    chromium
   ];
 
   time.timeZone = "America/Phoenix";

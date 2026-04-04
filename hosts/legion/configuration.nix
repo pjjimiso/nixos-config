@@ -90,11 +90,14 @@
   # Check /etc/nixos/configuration.nix on the laptop if unsure.
   system.stateVersion = "25.05";
 
-  programs.firefox.enable = true;
-
   programs.chromium = {
     enable = true;
     homepageLocation = "https://www.google.com";
+    extensions = [
+      "dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
+      "khncfooichmfjbepaaaebmommgaepoid" # unhook
+      "nngceckbapebfimnlniiiahkandclblb" # bitwarden
+    ];
   };
 
   programs.steam = {
