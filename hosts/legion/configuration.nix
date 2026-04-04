@@ -66,7 +66,7 @@
   };
 
   # Audio
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -91,6 +91,11 @@
   system.stateVersion = "25.05";
 
   programs.firefox.enable = true;
+
+  programs.chromium = {
+    enable = true;
+    homepageLocation = "https://www.google.com";
+  };
 
   programs.steam = {
     enable = true;
