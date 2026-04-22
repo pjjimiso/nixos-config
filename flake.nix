@@ -28,9 +28,13 @@
       url = "github:pjjimiso/liftoff";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, nix-index-database, ... }@inputs:
   let
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
   in {
@@ -38,6 +42,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        nix-index-database.nixosModules.default
         nixos-wsl.nixosModules.wsl
         home-manager.nixosModules.home-manager
         { home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ]; }
@@ -49,6 +54,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        nix-index-database.nixosModules.default
         nixos-hardware.nixosModules.lenovo-legion-16iax10h
         home-manager.nixosModules.home-manager
         { home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ]; }
@@ -60,12 +66,18 @@
       corporate = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit inputs; corporate = true; };
-        modules = [ sops-nix.homeManagerModules.sops ./home/default.nix ];
+        modules = [ 
+            sops-nix.homeManagerModules.sops ./home/default.nix 
+            nix-index-database.homeModules.default 
+        ];
       };
       personal = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit inputs; corporate = false; };
-        modules = [ sops-nix.homeManagerModules.sops ./home/default.nix ];
+        modules = [ 
+            sops-nix.homeManagerModules.sops ./home/default.nix 
+            nix-index-database.homeModules.default 
+        ];
       };
     };
 

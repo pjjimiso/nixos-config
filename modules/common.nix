@@ -9,6 +9,7 @@
     fd
     xclip
     chromium
+    comma
   ];
 
   time.timeZone = "America/Phoenix";
