@@ -114,6 +114,23 @@
           set -g @t-fzf-find-binding 'ctrl-f:reload(fd -H -d 2 -t d . ~)'
         '';
       }
+      {
+        plugin = pkgs.tmuxPlugins.mkTmuxPlugin {
+          pluginName = "tmux-ssh-split";
+          rtpFilePath = "ssh-split.tmux";
+          version = "unstable";
+          src = inputs.tmux-ssh-split;
+          postInstall = "patchShebangs $out";
+        };
+        extraConfig = ''
+          set -g @ssh-split-v-key '"'
+          set -g @ssh-split-h-key '_'
+          set -g @ssh-split-w-key 'c'
+
+          set-option -g @ssh-split-keep-cwd "true"
+          set-option -g @ssh-split-keep-remote-cwd "true"
+        '';
+      }
     ];
     extraConfig = ''
       # Secondary prefix
@@ -126,11 +143,11 @@
       bind BTab switch-client -l
 
       # Window/pane creation retaining current path
-      bind c new-window -c "#{pane_current_path}"
-      bind '"' split-window -v -c "#{pane_current_path}"
+      # bind c new-window -c "#{pane_current_path}"
+      # bind '"' split-window -v -c "#{pane_current_path}"
       bind '%' split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
-      bind _ split-window -h -c "#{pane_current_path}"
+      # bind _ split-window -h -c "#{pane_current_path}"
 
       # Pane navigation (vim-style)
       bind -r h select-pane -L
