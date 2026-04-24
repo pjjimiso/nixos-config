@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "bootdev-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776803917,
+        "narHash": "sha256-POOxwveDSQ3hiybFKmI2eQQEbxN45ubmfEUkLk7i/ng=",
+        "owner": "bootdotdev",
+        "repo": "bootdev",
+        "rev": "3e6f181bb2d09cd0de7414c7de08702b1404f74c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bootdotdev",
+        "repo": "bootdev",
+        "type": "github"
+      }
+    },
     "claude-code": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -172,6 +188,7 @@
     },
     "root": {
       "inputs": {
+        "bootdev-src": "bootdev-src",
         "claude-code": "claude-code",
         "home-manager": "home-manager",
         "liftoff": "liftoff",

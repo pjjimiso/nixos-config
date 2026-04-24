@@ -32,6 +32,10 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bootdev-src = {
+      url = "github:bootdotdev/bootdev";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, nix-index-database, ... }@inputs:
@@ -81,6 +85,6 @@
       };
     };
 
-    packages.x86_64-linux.bootdev = pkgs.callPackage ./pkgs/bootdev.nix { };
+    packages.x86_64-linux.bootdev = pkgs.callPackage ./pkgs/bootdev.nix { src = inputs.bootdev-src; };
   };
 }

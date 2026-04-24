@@ -1,15 +1,9 @@
-{ lib, buildGoModule, fetchFromGitHub }:
+{ lib, buildGoModule, src }:
 
-buildGoModule rec {
+buildGoModule {
   pname = "bootdev";
-  version = "1.27.4";
-
-  src = fetchFromGitHub {
-    owner = "bootdotdev";
-    repo = "bootdev";
-    rev = "v${version}";
-    hash = "sha256-9avSkYxXqwaLCJeNTJJG8biEVUwZVYRauZclw8wbd50=";
-  };
+  version = "unstable";
+  inherit src;
 
   vendorHash = "sha256-ZDioEU5uPCkd+kC83cLlpgzyOsnpj2S7N+lQgsQb8uY=";
 
