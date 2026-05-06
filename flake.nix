@@ -20,14 +20,6 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tmux-powerkit = {
-      url = "github:fabioluciano/tmux-powerkit";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    tmux-ssh-split = {
-      url = "github:pschmitt/tmux-ssh-split";
-      flake = false;
-    };
     liftoff = {
       url = "github:pjjimiso/liftoff";
       inputs.nixpkgs.follows = "nixpkgs";
