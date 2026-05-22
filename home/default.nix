@@ -85,6 +85,7 @@
     enable = true;
     settings = {
       theme = "tokyonight_night";
+      keybind = "shift+insert=paste_from_clipboard";
     };
   };
 
