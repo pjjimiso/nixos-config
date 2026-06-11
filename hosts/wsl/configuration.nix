@@ -7,6 +7,9 @@
   wsl.defaultUser = "pjjimiso";
   wsl.wslConf.network.generateHosts = false;
 
+  # nvim copy to clipboard
+  environment.systemPackages = with pkgs; [ win32yank ];
+
   users.users.pjjimiso.extraGroups = [ "docker" ];
 
   networking.proxy.default = "http://proxy-chain.intel.com:912";
