@@ -105,6 +105,7 @@
       tmux    = "tmux -2";
       python  = "python3";
       bdshell = "nix shell $HOME/nixos-config#bootdev";
+      ansible_2_8 = "nix-shell -p ansible -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-19.09.tar.gz";
     };
   };
 
