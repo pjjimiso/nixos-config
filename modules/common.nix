@@ -7,6 +7,7 @@
     go
     ripgrep
     fd
+    fzf
     xclip
     chromium
     comma

@@ -81,6 +81,11 @@
     executable = true;
   };
 
+  home.file.".local/bin/tmux-ssh-finder.sh" = {
+    source = ./tmux/tmux-ssh-finder.sh;
+    executable = true;
+  };
+
   programs.ghostty = {
     enable = true;
     settings = {
