@@ -110,6 +110,21 @@
     enable = true;
     enableCompletion = true;
     historyControl = [ "ignoredups" ];
+
+    # Launch tmux on startup
+    # Guards:
+    #   $- == *i*                 -> interactive shells only.
+    #   -t 1                      -> real terminal (skip pipes/scp/etc.).
+    #   -z $TMUX                  -> don't nest inside an existing tmux
+    #   -z BASH_EXECUTION_STRING  -> skip `bash -lc/-lic '<cmd>'` (i.e. daily-note.sh)
+    initExtra = ''
+      if [[ $- == *i* ]] && [[ -t 1 ]] \
+         && [[ -z "''${TMUX:-}" ]] && [[ -z "''${BASH_EXECUTION_STRING:-}" ]] \
+         && command -v tmux >/dev/null; then
+        exec tmux new-session -A -s main
+      fi
+    '';
+
     shellAliases = {
       vim     = "nvim";
       mux     = "tmuxinator";
