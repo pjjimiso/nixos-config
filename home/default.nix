@@ -97,6 +97,11 @@
     executable = true;
   };
 
+  home.file.".local/bin/tmux-daily-finder.sh" = {
+    source = ./tmux/tmux-daily-finder.sh;
+    executable = true;
+  };
+
   programs.ghostty = {
     enable = true;
     settings = {
