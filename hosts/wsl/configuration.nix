@@ -30,8 +30,8 @@
         if [ -d "$startup" ]; then
           cat > "$startup/daily-note.ahk" <<'AHK'
 ; Managed by nixos-config (hosts/wsl/configuration.nix) -- do not edit by hand.
-; Ctrl+Alt+D: open today's pj_notes daily note in the EXISTING WSL/tmux session.
-^!d::
+; Ctrl+.: open today's pj_notes daily note in the EXISTING WSL/tmux session.
+^.::
 ; The WSL distro is a singleton, so this hidden call shares the tmux server the
 ; visible terminal is attached to. "switch" tells the script to redirect that
 ; client to today's session instead of trying to open a new terminal.

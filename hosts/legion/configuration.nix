@@ -96,7 +96,7 @@
       "org/cinnamon/desktop/keybindings/custom-keybindings/custom0" = {
         name = "Daily Note";
         command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh'";
-        binding = [ "<Control><Alt>d" ];
+        binding = [ "<Control>period" ];
       };
     };
   };
