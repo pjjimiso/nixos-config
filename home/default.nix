@@ -59,6 +59,7 @@
     bash-completion
     gh
     btop
+    bat
     uv
     bitwarden-cli
     bitwarden
@@ -83,6 +84,11 @@
 
   home.file.".local/bin/tmux-ssh-finder.sh" = {
     source = ./tmux/tmux-ssh-finder.sh;
+    executable = true;
+  };
+
+  home.file.".local/bin/tmux-note-finder.sh" = {
+    source = ./tmux/tmux-note-finder.sh;
     executable = true;
   };
 
