@@ -19,17 +19,6 @@ PREVIEW='head -n 200 {1}'
 fi
 
 selection=$(
-FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
-fzf --ansi --disabled \
-    --bind "change:reload:sleep 0.05; $RG_PREFIX {q} || true" \
-    --delimiter ':' \
-    --prompt 'pj_notes > ' \
-    --preview "$PREVIEW" \
-    --preview-window 'right:60%:+{2}/2'
-) || exit 0
-
-# rg one-shot dump of every non-empty line; fzf does the fuzzy matching.
-selection=$(
 rg --no-heading --line-number --color=never '.' . \
   | fzf --delimiter ':' \
         --prompt 'pj_notes > ' \
