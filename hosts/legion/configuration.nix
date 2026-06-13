@@ -83,8 +83,23 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = { inherit inputs; corporate = false; };
-  home-manager.users.pjjimiso = import ../../home/default.nix;
   home-manager.backupFileExtension = ".bak";
+  home-manager.users.pjjimiso = {
+    imports = [ ../../home/default.nix ];
+
+    # Cinnamon custom shortcut: Ctrl+Alt+D opens today's daily note in a
+    # ghostty window (which runs the shared ~/.local/bin/daily-note.sh).
+    # Lives here, not in shared home/default.nix, because it is specific to
+    # this host's desktop environment.
+    dconf.settings = {
+      "org/cinnamon/desktop/keybindings".custom-list = [ "custom0" ];
+      "org/cinnamon/desktop/keybindings/custom-keybindings/custom0" = {
+        name = "Daily Note";
+        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh'";
+        binding = [ "<Control><Alt>d" ];
+      };
+    };
+  };
 
   # This value should match the NixOS release used during installation.
   # Check /etc/nixos/configuration.nix on the laptop if unsure.

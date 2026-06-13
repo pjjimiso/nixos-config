@@ -92,6 +92,11 @@
     executable = true;
   };
 
+  home.file.".local/bin/daily-note.sh" = {
+    source = ./tmux/daily-note.sh;
+    executable = true;
+  };
+
   programs.ghostty = {
     enable = true;
     settings = {
