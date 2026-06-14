@@ -87,16 +87,30 @@
   home-manager.users.pjjimiso = {
     imports = [ ../../home/default.nix ];
 
-    # Cinnamon custom shortcut: Ctrl+Alt+D opens today's daily note in a
-    # ghostty window (which runs the shared ~/.local/bin/daily-note.sh).
-    # Lives here, not in shared home/default.nix, because it is specific to
-    # this host's desktop environment.
+    # Cinnamon custom shortcuts: open a daily note in a ghostty window (which
+    # runs the shared ~/.local/bin/daily-note.sh). These live here, not in the
+    # shared home/default.nix, because they are specific to this host's desktop
+    # environment. The Windows/WSL equivalents are the AHK hotkeys deployed by
+    # hosts/wsl/configuration.nix; both pass the same symbolic day to the same
+    # shared script.
+    #   Ctrl+.  -> today      Ctrl+,  -> yesterday      Ctrl+/  -> tomorrow
+    # `attach` is arg 1 (this host owns its own terminal); the day is arg 2.
     dconf.settings = {
-      "org/cinnamon/desktop/keybindings".custom-list = [ "custom0" ];
+      "org/cinnamon/desktop/keybindings".custom-list = [ "custom0" "custom1" "custom2" ];
       "org/cinnamon/desktop/keybindings/custom-keybindings/custom0" = {
-        name = "Daily Note";
-        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh'";
+        name = "Daily Note (today)";
+        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach today'";
         binding = [ "<Control>period" ];
+      };
+      "org/cinnamon/desktop/keybindings/custom-keybindings/custom1" = {
+        name = "Daily Note (yesterday)";
+        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach yesterday'";
+        binding = [ "<Control>comma" ];
+      };
+      "org/cinnamon/desktop/keybindings/custom-keybindings/custom2" = {
+        name = "Daily Note (tomorrow)";
+        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach tomorrow'";
+        binding = [ "<Control>slash" ];
       };
     };
   };

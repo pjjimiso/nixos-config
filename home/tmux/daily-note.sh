@@ -16,11 +16,17 @@ VAULT_DIR="${PJ_VAULT_DIR:-$HOME/pj_notes}"
 #                       WSL hotkey call) -> redirect the already-attached client.
 mode="${1:-attach}"
 
-today="$(date +%F)"                       # e.g. 2026-06-13
-note_path="${NOTES_DIR}/${today}.md"
+# Which day's note to open: today (default), yesterday, tomorrow, or anything
+# else GNU `date -d` understands (e.g. "-2 days", "2026-12-25"). Keeping the
+# relative-date logic here means every launcher (Legion dconf, the WSL Ctrl+. /
+# Ctrl+, / Ctrl+/ hotkeys) shares one definition of "yesterday".
+day="${2:-today}"
+
+target="$(date -d "$day" +%F)"            # e.g. 2026-06-13
+note_path="${NOTES_DIR}/${target}.md"
 
 # Session will share the same name as the daily note
-SESSION="${DAILY_NOTE_SESSION:-daily-${today}}"
+SESSION="${DAILY_NOTE_SESSION:-daily-${target}}"
 
 mkdir -p "$NOTES_DIR"
 
