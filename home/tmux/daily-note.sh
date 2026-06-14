@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# daily-note.sh — create (if needed) and open today's daily note in nvim,
-# inside a dedicated per-day tmux session.
+# daily-note.sh — Open today's daily note in nvim inside a dedicated tmux session,
+# and creates today's note if it doesn't already exist
 #
 # This script is environment-agnostic: it assumes only that it is running in a
-# terminal with nvim + tmux on PATH. The per-OS hotkey launcher (AutoHotkey on
-# the Windows/WSL laptop, a Cinnamon custom shortcut on the legion host) is the
-# only thing that differs between machines — both ultimately just run this.
+# terminal with nvim + tmux on PATH. 
 set -euo pipefail
 
 NOTES_DIR="${PJ_NOTES_DIR:-$HOME/pj_notes/2_Areas/_Daily-Notes}"
@@ -21,27 +19,24 @@ mode="${1:-attach}"
 today="$(date +%F)"                       # e.g. 2026-06-13
 note_path="${NOTES_DIR}/${today}.md"
 
-# Per-day session name: makes "open today's note" idempotent and survives
-# tmux-continuum restoring an older `daily-*` session in the background.
+# Session will share the same name as the daily note
 SESSION="${DAILY_NOTE_SESSION:-daily-${today}}"
 
 mkdir -p "$NOTES_DIR"
 
-# Seed the note from the template only the first time it's opened today.
+# Create the note if it doesn't already exist
 if [ ! -f "$note_path" ]; then
   cat > "$note_path" <<'EOF'
-###### Focus
-1.
+## Focus Item
+- [ ] 
 
-###### Tasks
-1.
+## Tasks
+- [ ] 
+- [ ] 
+- [ ] 
 
-###### Maintenance
-1.
-2.
-3.
+## Scratch
 
-###### Notes
 
 EOF
 fi
