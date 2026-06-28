@@ -11,6 +11,7 @@
     xclip
     chromium
     comma
+    obsidian
   ];
 
   time.timeZone = "America/Phoenix";
