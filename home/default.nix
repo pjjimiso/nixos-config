@@ -93,6 +93,11 @@
     executable = true;
   };
 
+  home.file.".local/bin/tmux-note-name-finder.sh" = {
+    source = ./tmux/tmux-note-name-finder.sh;
+    executable = true;
+  };
+
   home.file.".local/bin/daily-note.sh" = {
     source = ./tmux/daily-note.sh;
     executable = true;

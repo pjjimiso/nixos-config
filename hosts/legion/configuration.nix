@@ -1,5 +1,17 @@
 { config, lib, pkgs, inputs, ... }:
 
+let
+  # Launcher for the daily-note keybinds. If a tmux client is already attached,
+  # redirect that (focused) client to the daily-note session in place — no new
+  # window. Otherwise fall back to opening a fresh ghostty window that attaches.
+  # `day` (today / yesterday / tomorrow) is passed through to daily-note.sh.
+  # NB: run as a plain `bash -c` (not through `ghostty -e`, which re-joins its
+  # args via `sh -c` and would mangle the nested command).
+  dailyNoteCmd = day:
+    "bash -c 'if tmux list-clients 2>/dev/null | grep -q .; "
+    + "then exec ~/.local/bin/daily-note.sh switch ${day}; "
+    + "else exec ghostty -e ~/.local/bin/daily-note.sh attach ${day}; fi'";
+in
 {
   imports = [
     ./hardware.nix
@@ -94,22 +106,24 @@
     # hosts/wsl/configuration.nix; both pass the same symbolic day to the same
     # shared script.
     #   Ctrl+.  -> today      Ctrl+,  -> yesterday      Ctrl+/  -> tomorrow
-    # `attach` is arg 1 (this host owns its own terminal); the day is arg 2.
+    # The command (see `dailyNoteCmd` above) switches the already-focused tmux
+    # client to the daily-note session in place, or opens a new ghostty window
+    # if nothing is attached.
     dconf.settings = {
       "org/cinnamon/desktop/keybindings".custom-list = [ "custom0" "custom1" "custom2" ];
       "org/cinnamon/desktop/keybindings/custom-keybindings/custom0" = {
         name = "Daily Note (today)";
-        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach today'";
+        command = dailyNoteCmd "today";
         binding = [ "<Control>period" ];
       };
       "org/cinnamon/desktop/keybindings/custom-keybindings/custom1" = {
         name = "Daily Note (yesterday)";
-        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach yesterday'";
+        command = dailyNoteCmd "yesterday";
         binding = [ "<Control>comma" ];
       };
       "org/cinnamon/desktop/keybindings/custom-keybindings/custom2" = {
         name = "Daily Note (tomorrow)";
-        command = "ghostty -e bash -lic 'exec ~/.local/bin/daily-note.sh attach tomorrow'";
+        command = dailyNoteCmd "tomorrow";
         binding = [ "<Control>slash" ];
       };
     };
