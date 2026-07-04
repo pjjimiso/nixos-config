@@ -23,4 +23,14 @@
   };
 
   virtualisation.docker.enable = true;
+
+  security.sudo.extraRules= [
+    {  users = [ "pjjimiso" ];
+      commands = [
+         { command = "ALL" ;
+           options= [ "NOPASSWD" ]; # "SETENV" # Adding the following could be a good idea
+        }
+      ];
+    }
+  ];
 }
