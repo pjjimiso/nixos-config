@@ -66,6 +66,7 @@
     inputs.claude-code.packages.${pkgs.system}.default
     inputs.liftoff.packages.x86_64-linux.default
     nodejs # needed for github copilot
+    unzip # needed for stylua
   ];
 
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
