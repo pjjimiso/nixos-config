@@ -1,18 +1,28 @@
 #!/usr/bin/env bash
-# tmux-note-name-finder.sh — regex-search names of files and directories
-# in notes dir and open the chosen match.
+# tmux-note-name-finder.sh — regex-search file/dir NAMES across every note vault
+# and open the chosen match. Searches each vault in VAULTS that exists on this
+# machine (see note-vaults.sh).
 set -euo pipefail
 
-NOTES_DIR="${HOME}/pj_notes"
+# shellcheck source=/dev/null
+source "${HOME}/.local/bin/note-vaults.sh"
 
 if ! command -v fd  >/dev/null; then echo "fd not on PATH";      sleep 2; exit 1; fi
 if ! command -v fzf >/dev/null; then echo "fzf not on PATH";     sleep 2; exit 1; fi
 
-cd "$NOTES_DIR"
+mapfile -t roots < <(note_existing_roots)
+[ ${#roots[@]} -eq 0 ] && { echo "no note vaults found on this machine"; sleep 2; exit 1; }
 
-# Reload on every keystroke with the query treated as an fd regex ({q})
+# Reload on every keystroke with the query treated as an fd regex ({q}).
 # `|| true` keeps fzf alive while the regex is mid-typing and momentarily invalid.
 FD='fd --hidden --exclude .git --color=never'
+
+# The reload bind is a raw shell string, so the roots must be pre-quoted here or
+# a path with spaces (e.g. "OneDrive - Intel") would split into several args.
+roots_q=""
+for r in "${roots[@]}"; do
+  roots_q+=" $(printf '%q' "$r")"
+done
 
 # bat previews files; for directories fall back to a tree/ls listing.
 if command -v bat >/dev/null; then
@@ -21,22 +31,25 @@ else
   PREVIEW='if [ -d {} ]; then ls -la -- {}; else head -n 200 -- {}; fi'
 fi
 
+# Passing absolute roots makes fd emit absolute paths, so a match already tells
+# us which vault it came from.
 selection=$(
-  $FD . \
+  $FD . "${roots[@]}" \
     | fzf --disabled \
-          --prompt 'pj_notes (regex) > ' \
-          --bind "change:reload:$FD --regex {q} || true" \
+          --prompt 'notes (regex) > ' \
+          --bind "change:reload:$FD --regex {q}$roots_q || true" \
           --preview "$PREVIEW" \
           --preview-window 'right:60%:wrap'
 ) || exit 0
 
 [ -z "$selection" ] && exit 0
 
-target="${NOTES_DIR}/${selection}"
+target="$selection"   # already absolute
 
 if [ -d "$target" ]; then
-  # Open a new window rooted in the directory, with nvim's file browser there.
-  exec tmux new-window -c "$target" "nvim '+cd ${target}' ."
+  # Open a new window rooted in the directory (tmux -c handles the path, spaces
+  # and all), with nvim's file browser there.
+  exec tmux new-window -c "$target" "nvim ."
 else
-  exec tmux new-window -c "$NOTES_DIR" "nvim -- '${target}'"
+  exec tmux new-window -c "$(dirname "$target")" "nvim -- '${target}'"
 fi

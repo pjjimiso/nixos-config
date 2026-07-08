@@ -92,6 +92,11 @@
     executable = true;
   };
 
+  home.file.".local/bin/note-vaults.sh" = {
+    source = ./tmux/note-vaults.sh;
+    executable = false;
+  };
+
   home.file.".local/bin/tmux-note-finder.sh" = {
     source = ./tmux/tmux-note-finder.sh;
     executable = true;
