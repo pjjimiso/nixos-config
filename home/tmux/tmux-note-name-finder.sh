@@ -15,7 +15,9 @@ mapfile -t roots < <(note_existing_roots)
 
 # Reload on every keystroke with the query treated as an fd regex ({q}).
 # `|| true` keeps fzf alive while the regex is mid-typing and momentarily invalid.
-FD='fd --hidden --exclude .git --color=never'
+# --full-path matches the regex against the whole path (not just the basename),
+# so a query like "work_notes" can filter by vault/directory name.
+FD='fd --hidden --exclude .git --color=never --full-path'
 
 # The reload bind is a raw shell string, so the roots must be pre-quoted here or
 # a path with spaces (e.g. "OneDrive - Intel") would split into several args.
