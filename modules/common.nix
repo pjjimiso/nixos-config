@@ -11,9 +11,14 @@
     xclip
     chromium
     comma
+    obsidian
   ];
 
   time.timeZone = "America/Phoenix";
+
+  # Allow unfree packages (required for NVIDIA drivers pulled in by nixos-hardware
+  # and for Obsidian)
+  nixpkgs.config.allowUnfree = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 # daily-note.sh — Open today's daily note in nvim inside a dedicated tmux session,
-# and creates today's note if it doesn't already exist
+# creating today's note from the shared template if it doesn't already exist.
+#
+# The note body comes from ONE template file that Obsidian's Daily Notes plugin
+# also points at ($VAULT_DIR/_templates/daily.md). Because it lives inside the
+# vault it syncs to the phone, so a note created here and a note created by
+# tapping "today's daily note" in Obsidian start from identical content.
 #
 # This script is environment-agnostic: it assumes only that it is running in a
-# terminal with nvim + tmux on PATH. 
+# terminal with nvim + tmux on PATH.
 set -euo pipefail
 
 NOTES_DIR="${PJ_NOTES_DIR:-$HOME/pj_notes/2_Areas/_Daily-Notes}"
 VAULT_DIR="${PJ_VAULT_DIR:-$HOME/pj_notes}"
+TEMPLATE_FILE="${PJ_DAILY_TEMPLATE:-$VAULT_DIR/_templates/daily.md}"
 
 # Launch mode:
 #   attach  (default) — this invocation owns a terminal (ghostty on Legion, or
@@ -30,21 +36,37 @@ SESSION="${DAILY_NOTE_SESSION:-daily-${target}}"
 
 mkdir -p "$NOTES_DIR"
 
-# Create the note if it doesn't already exist
-if [ ! -f "$note_path" ]; then
-  cat > "$note_path" <<'EOF'
+# Renders the shared daily-note template file that Obsidian uses, so a note
+# created here or in Obsidian are identical.
+render_template() {
+  cat -- "$TEMPLATE_FILE"
+}
+
+# Built-in fallback, used only if the template file is missing (e.g. before the
+# vault has synced to this machine). Mirrors the original hardcoded format.
+default_template() {
+  cat <<'EOF'
 ## Focus Item
-- [ ] 
+- [ ]
 
 ## Tasks
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 ## Scratch
 
 
 EOF
+}
+
+# Create the note if it doesn't already exist
+if [ ! -f "$note_path" ]; then
+  if [ -f "$TEMPLATE_FILE" ]; then
+    render_template "$day" > "$note_path"
+  else
+    default_template > "$note_path"
+  fi
 fi
 
 # Open the note with the vault as cwd so [[wiki-links]] / gf resolve.
