@@ -69,7 +69,7 @@
     unzip # needed for stylua
     lua-language-server # Lua LSP
     stylua # Lua formatter
-    pyright
+    pyright # Python LSP
   ];
 
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
