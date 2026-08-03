@@ -8,7 +8,7 @@
 # Paths may contain spaces but each entry should be double-quoted.
 VAULTS=(
   "${HOME}/pj_notes"
-  "/mnt/c/Users/$(whoami)/OneDrive - Intel Corporation/work_notes"
+  "${HOME}/work_notes"
 )
 
 # Echo one absolute path per line for every vault that exists on this machine.

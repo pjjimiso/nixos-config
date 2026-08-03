@@ -7,29 +7,47 @@
   wsl.defaultUser = "pjjimiso";
   wsl.wslConf.network.generateHosts = false;
 
+  nixpkgs.config.allowUnfree = true;
+
   users.users.pjjimiso.extraGroups = [ "docker" ];
 
   networking.proxy.default = "http://proxy-chain.intel.com:912";
   networking.proxy.noProxy = "127.0.0.1,localhost,intel.com";
 
   home-manager.extraSpecialArgs = { inherit inputs; corporate = true; };
-  home-manager.users.pjjimiso = { lib, ... }: {
-    imports = [ ../../home/default.nix ];
-    home.sessionPath = [
-      "/mnt/c/win32yank/"
-    ];
+  home-manager.useGlobalPkgs = true;
+  
+  home-manager.users.pjjimiso = { lib, pkgs, ... }:
+  let 
+      worknotesSync = pkgs.writeShellApplication {
+        name = "worknotes-sync";
+        runtimeInputs = [ pkgs.rsync pkgs.coreutils ];
+        text = ''
+          src="$HOME/work_notes/"
+          dst="/mnt/c/Users/pjjimiso/OneDrive - Intel Corporation/work_notes/"
+          mkdir -p "$dst"
+          rsync -rlt --delete --modify-window=2 \
+            --no-perms --no-owner --no-group \
+            --exclude='.git/' --exclude='*.swp' --exclude='*~' \
+            --exclude='.DS_Store' --exclude='4913' \
+            "$src" "$dst"
+        '';
+      };
+    in { 
+      imports = [ ../../home/default.nix ];
+      home.sessionPath = [
+        "/mnt/c/win32yank/"
+      ];
 
-    # Windows-side launcher for the daily note. NixOS can't own the global
-    # hotkey (it lives above the WSL boundary), but it can deploy the
-    # AutoHotkey v1 script into the Windows Startup folder via the /mnt/c
-    # mount. The hotkeys open a Windows Terminal running wsl -> the shared
-    # ~/.local/bin/daily-note.sh. Prereq: AutoHotkey installed on Windows.
-    #   Ctrl+.  -> today    Ctrl+,  -> yesterday    Ctrl+/  -> tomorrow
-    home.activation.installDailyNoteHotkey =
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        startup="/mnt/c/Users/pjjimiso/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup"
-        if [ -d "$startup" ]; then
-          cat > "$startup/daily-note.ahk" <<'AHK'
+      # Windows-side launcher for the daily note. Deploys the
+      # AutoHotkey v1 script into the Windows Startup folder.
+      # Hotkeys open a Windows Terminal running wsl.
+      #   Ctrl+.  -> today    Ctrl+,  -> yesterday    Ctrl+/  -> tomorrow
+      home.activation.installDailyNoteHotkey =
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          startup="/mnt/c/Users/pjjimiso/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup"
+          if [ -d "$startup" ]; then
+            cat > "$startup/daily-note.ahk" <<'AHK'
 ; Managed by nixos-config (hosts/wsl/configuration.nix) -- do not edit by hand.
 ; Daily-note hotkeys (open in the EXISTING WSL/tmux session):
 ;   Ctrl+.  -> today
@@ -54,8 +72,35 @@ OpenDaily(day) {
 }
 AHK
         fi
-      '';
+        '';
+
+      systemd.user.services.worknotes-sync = {
+        Unit.Description = "Mirror ~/work_notes to Intel OneDrive";
+        Service = { Type = "oneshot"; ExecStart = "${worknotesSync}/bin/worknotes-sync"; };
+      };
+
+      systemd.user.timers.worknotes-sync = {
+        Unit.Description = "work_notes -> Intel OneDrive every 5 minutes";
+        Timer = { OnBootSec = "2min"; OnUnitActiveSec = "5min"; Persistent = true; };
+        Install.WantedBy = [ "timers.target" ];
+      };
+
+      # Auto-start Obsidian
+      # WSL/WSLg: only default.target is reached in the USER instance
+      # Also systemd --user has no DISPLAY so we need to set it explicitly
+      systemd.user.services.obsidian = {
+        Unit.Description = "Obsidian (drives Obsidian Sync for pj_notes)";
+        Service = {
+          ExecStart = "${pkgs.obsidian}/bin/obsidian";
+          Environment = [ "DISPLAY=:0" ];
+          Restart = "on-failure";
+          RestartSec = 10;
+        };
+        Install.WantedBy = [ "default.target" ];
+      };
+
   };
 
   system.stateVersion = "25.05";
 }
+
