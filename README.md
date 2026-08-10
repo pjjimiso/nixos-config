@@ -63,6 +63,12 @@ Rebuild Legion
 sudo nixos-rebuild switch --flake .#legion
 ```
 
+Update Bootdev cli (non-flake git input)
+```bash
+nix flake update bootdev-src
+nix build .#bootdev
+```
+
 ### Non-NixOS machines (standalone home-manager)
 
 First, install Nix and home-manager, then clone this repo:
