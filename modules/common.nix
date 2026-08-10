@@ -12,6 +12,7 @@
     chromium
     comma
     obsidian
+    jq
   ];
 
   time.timeZone = "America/Phoenix";
