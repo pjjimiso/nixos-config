@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     vim
     gcc
+    gnumake # avante.nvim's build step downloads prebuilt Rust libs via make
     go
     ripgrep
     fd
@@ -14,6 +15,11 @@
     obsidian
     jq
   ];
+
+  # Loader for generic prebuilt binaries that npm/pip download (e.g. the
+  # claude-agent-acp SDK), which are dynamically linked against paths NixOS
+  # doesn't have. Without this they hit the stub-ld error.
+  programs.nix-ld.enable = true;
 
   time.timeZone = "America/Phoenix";
 

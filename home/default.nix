@@ -72,6 +72,10 @@
     pyright # Python LSP
   ];
 
+  # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
+  # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
+  home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
+
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
 
   home.activation.installTpm = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -169,7 +173,13 @@
 
   # Environment variables
   home.sessionVariables = lib.mkMerge [
-    { EDITOR = "nvim"; }
+    {
+      EDITOR = "nvim";
+      # npm's default prefix is the read-only nix store, so `npm install -g` fails.
+      # Currently needed for claude-agent-acp, the ACP adapter avante.nvim spawns to
+      # drive Claude Code.
+      NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+    }
     (lib.mkIf corporate {
       http_proxy = "http://proxy-chain.intel.com:912";
       https_proxy = "http://proxy-chain.intel.com:912";
