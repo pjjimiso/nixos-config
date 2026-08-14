@@ -11,6 +11,11 @@
 
   users.users.pjjimiso.extraGroups = [ "docker" ];
 
+  # Lingering starts user@1000.service at boot and creates the runtime dir which this
+  # config relies on. Without it, sometimes /run/user/1000 doesn't get created at boot 
+  # and things writing to XDG_RUNTIME_DIR fail until the user logs in.
+  users.users.pjjimiso.linger = true;
+
   networking.proxy.default = "http://proxy-chain.intel.com:912";
   networking.proxy.noProxy = "127.0.0.1,localhost,intel.com";
 
