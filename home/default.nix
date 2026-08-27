@@ -70,6 +70,7 @@
     lua-language-server # Lua LSP
     stylua # Lua formatter
     pyright # Python LSP
+    opencode
   ];
 
   # npm's default prefix is the read-only nix store, so `npm install -g` fails without a

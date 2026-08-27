@@ -3,11 +3,11 @@
     "bootdev-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1785951472,
-        "narHash": "sha256-CLnTw87NyGADT1WJvN8qao0eRTTSVI7nNIexZ6cdfG4=",
+        "lastModified": 1787317279,
+        "narHash": "sha256-DScpeUQdkzJy+RVkA8ZmGzp5Z9YzkvZViCoov64WAJk=",
         "owner": "bootdotdev",
         "repo": "bootdev",
-        "rev": "486ecf161c8992852b8f17a945fe5610f37f589b",
+        "rev": "39741169f1c616271fd90da2773589aee3044e26",
         "type": "github"
       },
       "original": {
@@ -186,6 +186,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1787498568,
+        "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "56c02bc00adcf003215cc4bd996d6efaf4cff188",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "bootdev-src": "bootdev-src",
@@ -196,6 +212,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "sops-nix": "sops-nix"
       }
     },
