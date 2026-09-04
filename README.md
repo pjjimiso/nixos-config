@@ -45,7 +45,8 @@ bw login && bw get notes "nixos-age-key" > ~/.config/sops/age/keys.txt
 chmod 600 ~/.config/sops/age/keys.txt
 sudo nixos-rebuild switch --flake .#hostname
 ```
-After that, gh should authenticate automatically on every login
+After that, gh should authenticate automatically on every login. See
+[GitHub PAT (SOPS)](#github-pat-sops) for rotating the token itself.
 
 ## Usage
 
@@ -95,6 +96,62 @@ Clone nvim config manually:
 ```bash
 git clone https://github.com/pjjimiso/kickstart.nvim ~/.config/nvim
 ```
+
+## GitHub PAT (SOPS)
+
+The GitHub PAT is stored encrypted in `secrets/secrets.yaml` under the
+`github_pat` key, sealed to the age key listed in `.sops.yaml`.
+
+| Piece | Location |
+|-------|----------|
+| Encrypted secret | `secrets/secrets.yaml` (`github_pat`) |
+| Age private key | `~/.config/sops/age/keys.txt` (from Bitwarden, see bootstrap) |
+| Recipients | `.sops.yaml` |
+| Secret declaration | `home/default.nix` (`sops.secrets.github_pat`) |
+| Consumer | `gh-auth.service` user unit in `home/default.nix` |
+
+On login, `gh-auth.service` pipes the decrypted PAT into
+`gh auth login --with-token`.
+
+### Generating a new PAT
+
+Create a classic token at <https://github.com/settings/tokens>
+
+### Rotating the token
+
+1. Edit the secret in place. `sops` decrypts into `$EDITOR`, then re-encrypts on
+   save — replace the `github_pat` value and quit:
+
+   ```bash
+   nix-shell -p sops --run 'sops secrets/secrets.yaml'
+   ```
+
+2. Rebuild so sops-nix re-decrypts the secret to its runtime path:
+
+   ```bash
+   sudo nixos-rebuild switch --flake .#wsl
+   ```
+
+3. Force `gh` onto the new token. `gh-auth.service` is guarded by
+   `if ! gh auth status`, so while the old token is still valid the service
+   skips re-authenticating — the logout is what makes the swap happen now
+   rather than whenever the old token expires:
+
+   ```bash
+   gh auth logout --hostname github.com
+   systemctl --user restart gh-auth
+   gh auth status
+   ```
+
+4. Commit the re-encrypted secret (ciphertext only, safe to push):
+
+   ```bash
+   git commit -am "Rotate github PAT"
+   ```
+
+If `gh auth status` reports a `gho_*` token, that came from an interactive
+`gh auth login` web flow rather than from this pipeline; a PAT from
+`secrets.yaml` shows as `ghp_*` or `github_pat_*`.
 
 ## Adding a new host
 
