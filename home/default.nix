@@ -79,6 +79,21 @@
 
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
 
+  # The plugin is just this skill directory (plus an opt-in always-on hook we don't
+  # use), so symlink it from the pinned input instead. Invoke with /i-have-adhd;
+  # "stop adhd mode" turns it off for the session.
+  home.file.".claude/skills/i-have-adhd".source =
+    "${inputs.i-have-adhd}/skills/i-have-adhd";
+
+  # Same skill for opencode, The plugin only imports node builtins, so it runs from the
+  # read-only store fine. opencode still writes package.json and node_modules into
+  # this directory itself; only opencode.jsonc is managed here.
+  home.file.".config/opencode/opencode.jsonc".source =
+    (pkgs.formats.json { }).generate "opencode.jsonc" {
+      "$schema" = "https://opencode.ai/config.json";
+      plugin = [ "${inputs.i-have-adhd}/.opencode/plugins/i-have-adhd.mjs" ];
+    };
+
   home.activation.installTpm = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
       ${pkgs.git}/bin/git clone https://github.com/tmux-plugins/tpm \

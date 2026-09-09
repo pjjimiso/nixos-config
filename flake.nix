@@ -33,6 +33,10 @@
       url = "github:bootdotdev/bootdev";
       flake = false;
     };
+    i-have-adhd = {
+      url = "github:ayghri/i-have-adhd";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, nix-index-database, ... }@inputs:
