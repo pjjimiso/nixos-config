@@ -143,6 +143,10 @@ in
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    lutris
+  ];
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = false; # Open ports in the firewall for Steam Remote Play
