@@ -64,6 +64,10 @@
     bitwarden-cli
     bitwarden
     inputs.claude-code.packages.${pkgs.system}.default
+    # Claude Code status line. Pinned npm release built by pkgs/ccstatusline.nix, so
+    # rendering never shells out to the network -- upstream's own installer writes
+    # `npx -y ccstatusline@latest` into settings.json, which re-resolves on every repaint.
+    (pkgs.callPackage ../pkgs/ccstatusline.nix { })
     inputs.liftoff.packages.x86_64-linux.default
     nodejs # needed for github copilot
     unzip # needed for stylua
@@ -92,6 +96,56 @@
     (pkgs.formats.json { }).generate "opencode.jsonc" {
       "$schema" = "https://opencode.ai/config.json";
       plugin = [ "${inputs.i-have-adhd}/.opencode/plugins/i-have-adhd.mjs" ];
+    };
+
+  # ccstatusline's widget layout, so every machine renders the same status line. This
+  # lands as a read-only store symlink, so the `ccstatusline` TUI can preview changes
+  # but not save them -- edit this attrset and rebuild instead. The TUI's "install to
+  # Claude Code" step is likewise not used; the `statusLine` command lives in
+  # ~/.claude/settings.json, which the separate claude-config repo owns.
+  home.file.".config/ccstatusline/settings.json".source =
+    (pkgs.formats.json { }).generate "ccstatusline-settings.json" {
+      # Upstream bumps this when the settings schema changes. On a mismatch ccstatusline
+      # migrates and rewrites the file, which it cannot do here -- so on a version bump,
+      # check upstream and update this alongside the package.
+      version = 4;
+      lines = [
+        [
+          { id = "1"; type = "model"; color = "cyan"; }
+          { id = "2"; type = "separator"; }
+          # git-changes below still say "no git" there -- add the same hide if that bugs you.
+          { id = "3"; type = "git-root-dir"; color = "ansi256:117"; metadata.hide = "no-git"; }   # light blue   #87d7ff
+          { id = "4"; type = "separator"; }
+          { id = "5"; type = "git-branch"; color = "ansi256:120"; }   # light green  #87ff87
+          { id = "6"; type = "separator"; }
+          { id = "7"; type = "git-changes"; color = "ansi256:230"; }   # cream        #ffffd7
+          { id = "8"; type = "separator"; }
+          # "Context: [##--------------] 100k/1.0M (10%)"
+          { id = "9"; type = "context-bar"; color = "yellow"; metadata.display = "progress-short"; }
+          #{ id = "10"; type = "context-percentage"; color = "yellow"; bold = true; rawValue = true; }
+        ]
+        [ ]
+        [ ]
+      ];
+      flexMode = "full";
+      compactThreshold = 60;
+      colorLevel = 2;
+      defaultPaddingSide = "both";
+      inheritSeparatorColors = false;
+      globalBold = false;
+      gitCacheTtlSeconds = 5;
+      terminalWidthCacheTtlSeconds = 5;
+      customCommandCacheTtlSeconds = 0;
+      minimalistMode = false;
+      powerline = {
+        enabled = false;
+        separators = [ "" ];
+        separatorInvertBackground = [ false ];
+        startCaps = [ ];
+        endCaps = [ ];
+        autoAlign = false;
+        continueThemeAcrossLines = false;
+      };
     };
 
   home.activation.installTpm = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

@@ -87,5 +87,6 @@
     };
 
     packages.x86_64-linux.bootdev = pkgs.callPackage ./pkgs/bootdev.nix { src = inputs.bootdev-src; };
+    packages.x86_64-linux.ccstatusline = pkgs.callPackage ./pkgs/ccstatusline.nix { };
   };
 }
