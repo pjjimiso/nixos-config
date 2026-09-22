@@ -3,7 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Pinned to the last rev carrying opencode 1.18.21. Bumping to unstable
+    # brought 1.18.30, which throws "undefined is not an object (evaluating 'a.name')"
+    # from SystemPrompt.environment on every prompt -- unpin once a fixed release lands.
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/56c02bc00adcf003215cc4bd996d6efaf4cff188";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
