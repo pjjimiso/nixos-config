@@ -47,6 +47,11 @@ in
     # Modesetting is required.
     modesetting.enable = true;
 
+    # Runs nvidia-powerd so the GPU can boost past its ~50W base TGP (up to
+    # 115W on this Legion's RTX 5060). Without it, games are power-capped in
+    # P4 at roughly half performance.
+    dynamicBoost.enable = true;
+
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     powerManagement.enable = false;
     # Fine-grained power management. Turns off GPU when not in use.
@@ -155,6 +160,7 @@ in
 
   environment.systemPackages = with pkgs; [
     lutris
+    spotify
   ];
 
   programs.steam = {
