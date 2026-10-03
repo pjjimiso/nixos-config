@@ -110,6 +110,22 @@
         "type": "github"
       }
     },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790685460,
+        "narHash": "sha256-zQ/wVrcHjIC+UjP4nDw3HARMqZd6LIDFmHKlp8AADYI=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "nix-index-database": {
       "inputs": {
         "nixpkgs": [
@@ -207,6 +223,7 @@
         "home-manager": "home-manager",
         "i-have-adhd": "i-have-adhd",
         "liftoff": "liftoff",
+        "mattpocock-skills": "mattpocock-skills",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",

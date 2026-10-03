@@ -1,6 +1,8 @@
 { pkgs, lib, config, inputs, corporate ? false, ... }:
 
 {
+  imports = [ ./skills.nix ];
+
   home.username = "pjjimiso";
   home.homeDirectory = "/home/pjjimiso";
   home.stateVersion = "25.05";
@@ -83,13 +85,10 @@
 
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
 
-  # The plugin is just this skill directory (plus an opt-in always-on hook we don't
-  # use), so symlink it from the pinned input instead. Invoke with /i-have-adhd;
-  # "stop adhd mode" turns it off for the session.
-  home.file.".claude/skills/i-have-adhd".source =
-    "${inputs.i-have-adhd}/skills/i-have-adhd";
+  # Agent skills (mattpocock/skills, i-have-adhd, ...) are installed into
+  # ~/.claude/skills by ./skills.nix, where both Claude Code and opencode find them.
 
-  # Same skill for opencode, The plugin only imports node builtins, so it runs from the
+  # i-have-adhd for opencode. The plugin only imports node builtins, so it runs from the
   # read-only store fine. opencode still writes package.json and node_modules into
   # this directory itself; only opencode.jsonc is managed here.
   home.file.".config/opencode/opencode.jsonc".source =
