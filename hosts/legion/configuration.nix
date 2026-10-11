@@ -172,6 +172,30 @@ in
 
   services.flatpak.enable = true;
 
+  # Remap the Razer Naga Chroma's 12-button side pad to numpad keys.
+  # Scoped to the Naga's USB ID (1532:0053) and leaves the real keyboard
+  # number row untouched.
+  services.keyd = {
+    enable = true;
+    keyboards.naga = {
+      ids = [ "1532:0053" ];
+      settings.main = {
+        "1" = "kp1";
+        "2" = "kp2";
+        "3" = "kp3";
+        "4" = "kp4";
+        "5" = "kp5";
+        "6" = "kp6";
+        "7" = "kp7";
+        "8" = "kp8";
+        "9" = "kp9";
+        "0" = "kp0";
+        "minus" = "kpminus"; # side button 11
+        "equal" = "kpplus";  # side button 12
+      };
+    };
+  };
+
   # Do not suspend/hibernate when closing laptop lid
   services.logind.lidSwitch = "ignore";
 }
