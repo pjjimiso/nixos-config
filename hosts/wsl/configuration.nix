@@ -21,6 +21,22 @@
 
   home-manager.extraSpecialArgs = { inherit inputs; corporate = true; };
   home-manager.useGlobalPkgs = true;
+
+  # Intel root CAs, fetched from Intel's public PKI repository at build time
+  # so no certificate material lives in this repo. Pure-eval friendly.
+  # Line endings are normalized because the published PEMs use CRLF.
+  security.pki.certificateFiles =
+    let
+      intelRootCA = name: hash: pkgs.fetchurl {
+        inherit hash;
+        url = "http://pki.intel.com/crt/${name}-Base64.crt";
+        postFetch = ''sed -i 's/\r$//' "$out"'';
+      };
+    in [
+      (intelRootCA "IntelSHA256RootCA" "sha256-wbs8Lvfj2c+vZTfPG2Zzh/hpaBp4oA2QWB90858RreI=")
+      (intelRootCA "IntelSHA384RootCA" "sha256-Zmf9n1wqK6b+eIDow5oS01jQSnMFkIdLPTLQal5nrIg=")
+      (intelRootCA "IntelSHA512RootCA" "sha256-y2GaoLfMdE9WXwUtHK8iaQ3tUqulXH/qg75z+LrSL3s=")
+    ];
   
   home-manager.users.pjjimiso = { lib, pkgs, ... }:
   let 
