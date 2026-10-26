@@ -1,7 +1,7 @@
 { pkgs, lib, config, inputs, corporate ? false, ... }:
 
 {
-  imports = [ ./skills.nix ];
+  imports = [ ./skills.nix ./opencode.nix ];
 
   home.username = "pjjimiso";
   home.homeDirectory = "/home/pjjimiso";
@@ -76,8 +76,20 @@
     lua-language-server # Lua LSP
     stylua # Lua formatter
     pyright # Python LSP
-    opencode
+    util-linux # script provides the pseudo-terminal used by bootdev_run
+    (pkgs.callPackage ../pkgs/bootdev.nix { src = inputs.bootdev-src; })
   ];
+
+  programs.opencode = {
+    enable = true;
+    # Use V2 for standalone Home Manager as well as the NixOS hosts.
+    package = pkgs.callPackage ../pkgs/opencode.nix { };
+  };
+
+  xdg.configFile."opencode/plugins" = {
+    source = ./opencode/plugins;
+    recursive = true;
+  };
 
   # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
   # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
@@ -90,7 +102,7 @@
 
   # i-have-adhd for opencode. The plugin only imports node builtins, so it runs from the
   # read-only store fine. opencode still writes package.json and node_modules into
-  # this directory itself; only opencode.jsonc is managed here.
+  # this directory itself; its settings and plugin sources are managed individually.
   home.file.".config/opencode/opencode.jsonc".source =
     (pkgs.formats.json { }).generate "opencode.jsonc" {
       "$schema" = "https://opencode.ai/config.json";
