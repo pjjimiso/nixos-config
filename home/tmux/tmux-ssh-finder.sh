@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --window: open the connection as a new window in the current session
+# instead of in a dedicated ssh-<host> session.
+mode="session"
+[ "${1:-}" = "--window" ] && mode="window"
+
 CONFIG="${HOME}/.ssh/config"
 [ -r "$CONFIG" ] || { echo "no readable $CONFIG"; sleep 2; exit 1; }
 
@@ -25,6 +30,11 @@ END { if (h != "") print h "\t" hn }
 
 
 [ -z "$host" ] && exit 0
+
+if [ "$mode" = "window" ]; then
+    tmux new-window -n "$host" "ssh $host"
+    exit 0
+fi
 
 session="ssh-${host//./_}"
 session="${session//:/_}"
