@@ -91,6 +91,12 @@
     recursive = true;
   };
 
+  # opencode agents, e.g. the LLM Wiki Librarian (Tab to it in `opencode ~/work_wiki`).
+  xdg.configFile."opencode/agents" = {
+    source = ./opencode/agents;
+    recursive = true;
+  };
+
   # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
   # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
   home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
