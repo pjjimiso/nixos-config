@@ -6,6 +6,7 @@
     gcc
     gnumake # avante.nvim's build step downloads prebuilt Rust libs via make
     go
+    python3
     ripgrep
     fd
     fzf
