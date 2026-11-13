@@ -91,6 +91,12 @@
     recursive = true;
   };
 
+  # opencode agents, e.g. the LLM Wiki Librarian (Tab to it in `opencode ~/work_wiki`).
+  xdg.configFile."opencode/agents" = {
+    source = ./opencode/agents;
+    recursive = true;
+  };
+
   # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
   # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
   home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
@@ -223,6 +229,32 @@
     #   -z $TMUX                  -> don't nest inside an existing tmux
     #   -z BASH_EXECUTION_STRING  -> skip `bash -lc/-lic '<cmd>'` (i.e. daily-note.sh)
     initExtra = ''
+      # Print the newest github-copilot/claude-<family>-X.Y model (skips variants like -fast).
+      # $1 = family (sonnet|opus), $2 = fallback if the lookup comes back empty.
+      _latest_claude() {
+        local latest
+        latest=$(opencode models 2>/dev/null \
+          | grep -E "^github-copilot/claude-$1-[0-9]+(\.[0-9]+)*$" \
+          | sort -V | tail -n1)
+        echo "''${latest:-$2}"
+      }
+
+      # ocr <prompt...>: one-shot opencode run on the latest Claude Sonnet.
+      ocr() {
+        opencode run --model "$(_latest_claude sonnet github-copilot/claude-sonnet-5.5)" "$@"
+      }
+
+      # ingest <work|personal>: librarian agent on the latest Claude Opus.
+      ingest() {
+        if [[ $# -ne 1 ]]; then
+          echo "usage: ingest <work|personal>" >&2
+          return 1
+        fi
+        opencode mini --agent librarian \
+          -m "$(_latest_claude opus github-copilot/claude-opus-5.5)" \
+          --prompt "ingest new files in $1"
+      }
+
       if [[ $- == *i* ]] && [[ -t 1 ]] \
          && [[ -z "''${TMUX:-}" ]] && [[ -z "''${BASH_EXECUTION_STRING:-}" ]] \
          && command -v tmux >/dev/null; then
