@@ -100,6 +100,14 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+
+    # Keep Bluetooth headphones in A2DP (high quality) when an app opens a mic;
+    # voice chat uses the USB Yeti instead of the headset mic.
+    wireplumber.extraConfig."51-bluetooth-no-autoswitch" = {
+      "wireplumber.settings" = {
+        "bluetooth.autoswitch-to-headset-profile" = false;
+      };
+    };
   };
 
   # User account
@@ -161,6 +169,8 @@ in
   environment.systemPackages = with pkgs; [
     lutris
     spotify
+    discord
+    (callPackage ../../pkgs/wowup-cf.nix { })
   ];
 
   programs.steam = {
