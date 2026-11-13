@@ -14,6 +14,7 @@
     comma
     obsidian
     jq
+    handy
   ];
 
   # Loader for generic prebuilt binaries that npm/pip download (e.g. the
@@ -33,6 +34,9 @@
       # so cannot reach the intel-foundry.ghe.com tenant. Track the upstream 2.x release
       # instead, packaged from npm in pkgs/opencode.nix.
       opencode = final.callPackage ../pkgs/opencode.nix { };
+
+      # handy (offline speech-to-text) isn't packaged in 25.05; take it from unstable.
+      handy = inputs.nixpkgs-unstable.legacyPackages.${final.system}.handy;
     })
   ];
 
