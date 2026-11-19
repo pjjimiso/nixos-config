@@ -1,11 +1,15 @@
-{ lib, inputs, ... }:
+{ config, lib, inputs, ... }:
 
 # Agent skills, installed globally so every project on every machine sees them.
 #
-# Everything lands in ~/.claude/skills/<name>, the one global path BOTH harnesses
-# scan: Claude Code natively, and opencode via its Claude-compatibility paths
-# (opencode also checks ~/.config/opencode/skills and ~/.agents/skills, but one
-# copy here is enough -- duplicating would list every skill twice).
+# The one real copy lives in ~/.agents/skills/<name>, the cross-tool path opencode
+# scans. Claude Code only reads ~/.claude/skills, so each skill also gets a
+# symlink there pointing back at ~/.agents/skills/<name>. opencode scans
+# ~/.claude/skills too, but it picks skills by ID (later sources win), so the same
+# skill found in both places loads once.
+#
+# Don't install skills with `npx skills`: it writes real directories into
+# ~/.agents/skills, and Home Manager won't replace them on the next switch.
 #
 # To install another skill (e.g. an Elasticsearch one), either:
 #   * add its repo as a `flake = false` input in flake.nix and one line in
@@ -29,13 +33,21 @@ let
     # Invoke with /i-have-adhd; "stop adhd mode" turns it off for the session.
     # Its opencode plugin counterpart is wired up in default.nix.
     i-have-adhd = "${inputs.i-have-adhd}/skills/i-have-adhd";
+    find-skills = "${inputs.vercel-skills}/skills/find-skills";
   };
 
   localSkills = lib.optionalAttrs (builtins.pathExists ./skills) (skillsIn ./skills);
 
   allSkills = mattpocockSkills // extraSkills // localSkills;
+
+  agentsDir = "${config.home.homeDirectory}/.agents/skills";
 in
 {
-  home.file = lib.mapAttrs' (name: source:
-    lib.nameValuePair ".claude/skills/${name}" { inherit source; }) allSkills;
+  home.file =
+    lib.mapAttrs' (name: source:
+      lib.nameValuePair ".agents/skills/${name}" { inherit source; }) allSkills
+    // lib.mapAttrs' (name: _:
+      lib.nameValuePair ".claude/skills/${name}" {
+        source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/${name}";
+      }) allSkills;
 }

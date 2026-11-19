@@ -104,7 +104,8 @@
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
 
   # Agent skills (mattpocock/skills, i-have-adhd, ...) are installed into
-  # ~/.claude/skills by ./skills.nix, where both Claude Code and opencode find them.
+  # ~/.agents/skills by ./skills.nix, with per-skill symlinks in ~/.claude/skills
+  # so Claude Code finds them too.
 
   # i-have-adhd for opencode. The plugin only imports node builtins, so it runs from the
   # read-only store fine. opencode still writes package.json and node_modules into

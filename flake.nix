@@ -41,6 +41,10 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
+    vercel-skills = {
+      url = "github:vercel-labs/skills";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, nix-index-database, ... }@inputs:
