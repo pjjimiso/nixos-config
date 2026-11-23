@@ -70,6 +70,16 @@ nix flake update bootdev-src
 nix build .#bootdev
 ```
 
+Update the m365 agent skill (corporate only). Its releases live on internal
+mfg-github, which Nix can't download from, so a script fetches the zip with `gh`,
+adds it to the Nix store, and bumps `pkgs/m365-skill.json`:
+```bash
+./scripts/update-m365-skill.sh          # latest release; or pass a tag, e.g. v1.1.26
+sudo nixos-rebuild switch --flake .#wsl
+```
+On a fresh machine, run it with the pinned tag (see `pkgs/m365-skill.json`) before
+the first rebuild.
+
 ### Non-NixOS machines (standalone home-manager)
 
 First, install Nix and home-manager, then clone this repo:

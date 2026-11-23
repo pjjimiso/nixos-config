@@ -1,4 +1,4 @@
-{ config, lib, inputs, ... }:
+{ config, lib, pkgs, inputs, corporate ? false, ... }:
 
 # Agent skills, installed globally so every project on every machine sees them.
 #
@@ -16,6 +16,8 @@
 #     `extraSkills` below pointing at the directory containing its SKILL.md, or
 #   * commit it to this repo under home/skills/<name>/SKILL.md -- the local
 #     directory is auto-discovered.
+#
+# Skills that should only exist on the corp network go in `corporateSkills`.
 let
   # name -> source for every skill subdirectory of `dir` (README.md etc. ignored).
   skillsIn = dir:
@@ -36,9 +38,16 @@ let
     find-skills = "${inputs.vercel-skills}/skills/find-skills";
   };
 
+  # Corp-network only. Their sources live on internal hosts a personal machine can't
+  # reach, and are only fetched when evaluated, so keep them inside this guard.
+  corporateSkills = lib.optionalAttrs corporate {
+    # Microsoft 365 via Graph. Update with scripts/update-m365-skill.sh.
+    m365 = "${pkgs.callPackage ../pkgs/m365-skill.nix { }}";
+  };
+
   localSkills = lib.optionalAttrs (builtins.pathExists ./skills) (skillsIn ./skills);
 
-  allSkills = mattpocockSkills // extraSkills // localSkills;
+  allSkills = mattpocockSkills // extraSkills // corporateSkills // localSkills;
 
   agentsDir = "${config.home.homeDirectory}/.agents/skills";
 in
