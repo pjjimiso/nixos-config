@@ -97,6 +97,12 @@
     recursive = true;
   };
 
+  # Global agent instructions. opencode reads ~/.config/opencode/AGENTS.md; Claude Code
+  # only reads ~/.claude/CLAUDE.md, so that is a symlink pointing back at it.
+  xdg.configFile."opencode/AGENTS.md".source = ./opencode/AGENTS.md;
+  home.file.".claude/CLAUDE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/opencode/AGENTS.md";
+
   # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
   # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
   home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
