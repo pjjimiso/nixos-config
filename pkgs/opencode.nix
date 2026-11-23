@@ -4,7 +4,7 @@
 # @opencode-ai/cli was the pre-release beta) rather than nixpkgs' opencode-ai.
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode";
-  version = "2.0.32";
+  version = "2.3.2";
 
   # The @opencode/cli wrapper package only selects a platform package via
   # optionalDependencies; the platform package is just package.json plus a single
@@ -12,7 +12,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   src = fetchurl {
     url = "https://registry.npmjs.org/@opencode/cli-linux-x64/-/cli-linux-x64-${finalAttrs.version}.tgz";
     #   curl -s https://registry.npmjs.org/@opencode/cli-linux-x64/<version> | jq -r .dist.integrity
-    hash = "sha512-Q50ofBQ3gdwjD6ZQhrVR8fVlm8D2xPMshy4dynY6l6b+qLdKgBSJ9WpoaDyrQX1YWmf2s7IN4RbXmoXXdJitDA==";
+    hash = "sha512-E9txUc4fNtvuEQUiEx84h4/bd/LJZcAHdIu0yfZRP8KDVP79WhzhEd7BTckJUyvWUc58ZP/o+nfgcnTQnvfJgw==";
   };
 
   nativeBuildInputs = [ patchelf makeBinaryWrapper ];
