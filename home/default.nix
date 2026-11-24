@@ -101,6 +101,11 @@
       "${config.home.homeDirectory}/Projects/agents/elastic/agent.md";
   };
 
+  # Corp ssh config comes from flake input `corp-dotfiles`
+  home.file.".ssh/config" = lib.mkIf corporate {
+    source = "${inputs.corp-dotfiles}/.ssh/config";
+  };
+
   # Link ~/.claude/CLAUDE.md to ~/.config/opencode/AGENTS.md for Claude Code
   xdg.configFile."opencode/AGENTS.md".source = ./opencode/AGENTS.md;
   home.file.".claude/CLAUDE.md".source =
@@ -253,18 +258,6 @@
         opencode mini --agent librarian \
           -m "$(_latest_claude opus github-copilot/claude-opus-5.5)" \
           --prompt "ingest new files in $1"
-      }
-
-      # sst <host>: ssh + attach/create a tmux session on a host NOT managed by this
-      # flake (no remote config needed). Prefix C-s and a top status bar are set
-      # inline so the remote layer is distinguishable from the local C-a one.
-      # Plain `ssh` stays untouched, so scp/rsync/`ssh host cmd` keep working.
-      sst() {
-        if [[ $# -ne 1 ]]; then
-          echo "usage: sst <host>" >&2
-          return 1
-        fi
-        ssh -t "$1" "tmux -L ssh new-session -A -s remote \; set -g prefix C-s \; bind C-s send-prefix \; set -g status-position top"
       }
 
       # Launch tmux on startup (see guards above). SSH logins (SSH_TTY set) get a

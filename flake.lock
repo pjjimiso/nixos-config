@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "corp-dotfiles": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795562756,
+        "narHash": "sha256-ahkSvztt4dHLWvRoZnTjh/owKCqu9e/582pMD9595jM=",
+        "ref": "refs/heads/main",
+        "rev": "eef6592e9b650ce8f3c52dd5660fa17e2a157ba0",
+        "revCount": 2,
+        "type": "git",
+        "url": "ssh://git@mfg-github.mfg.intel.com/pjjimiso/dotfiles.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@mfg-github.mfg.intel.com/pjjimiso/dotfiles.git"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -204,6 +220,7 @@
       "inputs": {
         "bootdev-src": "bootdev-src",
         "claude-code": "claude-code",
+        "corp-dotfiles": "corp-dotfiles",
         "home-manager": "home-manager",
         "liftoff": "liftoff",
         "mattpocock-skills": "mattpocock-skills",

@@ -47,6 +47,14 @@
     "127.0.1.1" = [ "nixos.clients.intel.com" "nixos" ];
   };
 
+  # Running `ssh <host>` creates/attaches to a tmux session on the remote server 
+  # Remote sessions are nested and use C-s instead of C-a 
+  programs.ssh.extraConfig = ''
+    Match sessiontype shell !host *uts*
+        RequestTTY yes
+        RemoteCommand command -v tmux >/dev/null && exec tmux -L ssh new-session -A -s remote \; set -g prefix C-s \; bind C-s send-prefix \; set -g status-position top || exec $SHELL -l
+  '';
+
   virtualisation.docker.enable = true;
 
   security.sudo.extraRules= [

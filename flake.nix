@@ -41,6 +41,11 @@
       url = "github:vercel-labs/skills";
       flake = false;
     };
+    # Update with `nix flake update corp-dotfiles` from a machine that can reach mfg-github
+    corp-dotfiles = {
+      url = "git+ssh://git@mfg-github.mfg.intel.com/pjjimiso/dotfiles.git";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, nixos-hardware, sops-nix, liftoff, nix-index-database, ... }@inputs:
