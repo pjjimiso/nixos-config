@@ -66,9 +66,7 @@
     bitwarden-cli
     bitwarden
     inputs.claude-code.packages.${pkgs.system}.default
-    # Claude Code status line. Pinned npm release built by pkgs/ccstatusline.nix, so
-    # rendering never shells out to the network -- upstream's own installer writes
-    # `npx -y ccstatusline@latest` into settings.json, which re-resolves on every repaint.
+    # Claude Code status line built by pkgs/ccstatusline.nix
     (pkgs.callPackage ../pkgs/ccstatusline.nix { })
     inputs.liftoff.packages.x86_64-linux.default
     nodejs # needed for github copilot
@@ -80,9 +78,9 @@
     (pkgs.callPackage ../pkgs/bootdev.nix { src = inputs.bootdev-src; })
   ];
 
+  # Opencode V2
   programs.opencode = {
     enable = true;
-    # Use V2 for standalone Home Manager as well as the NixOS hosts.
     package = pkgs.callPackage ../pkgs/opencode.nix { };
   };
 
@@ -91,47 +89,42 @@
     recursive = true;
   };
 
-  # opencode agents, e.g. the LLM Wiki Librarian (Tab to it in `opencode ~/work_wiki`).
+  # Opencode Agents
   xdg.configFile."opencode/agents" = {
     source = ./opencode/agents;
     recursive = true;
   };
 
-  # Global agent instructions. opencode reads ~/.config/opencode/AGENTS.md; Claude Code
-  # only reads ~/.claude/CLAUDE.md, so that is a symlink pointing back at it.
+  # Elastic agent and MCP servers live in ~/Projects/agents/elastic
+  xdg.configFile."opencode/agents/elastic.md" = lib.mkIf corporate {
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/Projects/agents/elastic/agent.md";
+  };
+
+  # Link ~/.claude/CLAUDE.md to ~/.config/opencode/AGENTS.md for Claude Code
   xdg.configFile."opencode/AGENTS.md".source = ./opencode/AGENTS.md;
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/opencode/AGENTS.md";
 
-  # npm's default prefix is the read-only nix store, so `npm install -g` fails without a
-  # writable one. See NPM_CONFIG_PREFIX in home.sessionVariables below.
+  # npm's default prefix is the read-only nix store, so here's a writable one
   home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
 
   home.file.".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
 
-  # Agent skills (mattpocock/skills, i-have-adhd, ...) are installed into
-  # ~/.agents/skills by ./skills.nix, with per-skill symlinks in ~/.claude/skills
-  # so Claude Code finds them too.
+  # Agent skills are installed into ~/.agents/skills by ./skills.nix
+  # Also symlinks to ~/.claude/skills for Claude Code
 
-  # i-have-adhd for opencode. The plugin only imports node builtins, so it runs from the
-  # read-only store fine. opencode still writes package.json and node_modules into
-  # this directory itself; its settings and plugin sources are managed individually.
+  # opencode still writes package.json and node_modules into this directory itself
   home.file.".config/opencode/opencode.jsonc".source =
     (pkgs.formats.json { }).generate "opencode.jsonc" {
       "$schema" = "https://opencode.ai/config.json";
-      plugin = [ "${inputs.i-have-adhd}/.opencode/plugins/i-have-adhd.mjs" ];
     };
 
-  # ccstatusline's widget layout, so every machine renders the same status line. This
-  # lands as a read-only store symlink, so the `ccstatusline` TUI can preview changes
-  # but not save them -- edit this attrset and rebuild instead. The TUI's "install to
-  # Claude Code" step is likewise not used; the `statusLine` command lives in
-  # ~/.claude/settings.json, which the separate claude-config repo owns.
+  # ccstatusline's widget layout - the `statusLine` command lives in
+  # ~/.claude/settings.json
   home.file.".config/ccstatusline/settings.json".source =
     (pkgs.formats.json { }).generate "ccstatusline-settings.json" {
-      # Upstream bumps this when the settings schema changes. On a mismatch ccstatusline
-      # migrates and rewrites the file, which it cannot do here -- so on a version bump,
-      # check upstream and update this alongside the package.
+      # Upstream bumps this when the settings schema changes
       version = 4;
       lines = [
         [
@@ -262,10 +255,29 @@
           --prompt "ingest new files in $1"
       }
 
+      # sst <host>: ssh + attach/create a tmux session on a host NOT managed by this
+      # flake (no remote config needed). Prefix C-s and a top status bar are set
+      # inline so the remote layer is distinguishable from the local C-a one.
+      # Plain `ssh` stays untouched, so scp/rsync/`ssh host cmd` keep working.
+      sst() {
+        if [[ $# -ne 1 ]]; then
+          echo "usage: sst <host>" >&2
+          return 1
+        fi
+        ssh -t "$1" "tmux -L ssh new-session -A -s remote \; set -g prefix C-s \; bind C-s send-prefix \; set -g status-position top"
+      }
+
+      # Launch tmux on startup (see guards above). SSH logins (SSH_TTY set) get a
+      # separate server on the `ssh` socket; tmux.conf keys off that socket name to
+      # use prefix C-s, so nested remote sessions don't collide with local C-a.
       if [[ $- == *i* ]] && [[ -t 1 ]] \
          && [[ -z "''${TMUX:-}" ]] && [[ -z "''${BASH_EXECUTION_STRING:-}" ]] \
          && command -v tmux >/dev/null; then
-        exec tmux new-session -A -s main
+        if [[ -n "''${SSH_TTY:-}" ]]; then
+          exec tmux -L ssh new-session -A -s remote
+        else
+          exec tmux new-session -A -s main
+        fi
       fi
     '';
 
