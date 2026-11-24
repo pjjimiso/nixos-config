@@ -33,10 +33,6 @@
       url = "github:bootdotdev/bootdev";
       flake = false;
     };
-    i-have-adhd = {
-      url = "github:ayghri/i-have-adhd";
-      flake = false;
-    };
     mattpocock-skills = {
       url = "github:mattpocock/skills";
       flake = false;

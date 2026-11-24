@@ -32,9 +32,6 @@ let
     // skillsIn "${inputs.mattpocock-skills}/skills/productivity";
 
   extraSkills = {
-    # Invoke with /i-have-adhd; "stop adhd mode" turns it off for the session.
-    # Its opencode plugin counterpart is wired up in default.nix.
-    i-have-adhd = "${inputs.i-have-adhd}/skills/i-have-adhd";
     find-skills = "${inputs.vercel-skills}/skills/find-skills";
   };
 
