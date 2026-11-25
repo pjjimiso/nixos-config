@@ -5,7 +5,7 @@ buildGoModule {
   version = "unstable";
   inherit src;
 
-  vendorHash = "sha256-ZDioEU5uPCkd+kC83cLlpgzyOsnpj2S7N+lQgsQb8uY=";
+  vendorHash = "sha256-LCvJDsg4MANhQ0V/ymP1heCN5rFNgeOYCYILsPdXYag=";
 
   # The timeout test spawns a fake `go` that execs /bin/sleep, which the nix build
   # sandbox does not provide (only /bin/sh exists)

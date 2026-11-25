@@ -3,11 +3,11 @@
     "bootdev-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1787317279,
-        "narHash": "sha256-DScpeUQdkzJy+RVkA8ZmGzp5Z9YzkvZViCoov64WAJk=",
+        "lastModified": 1794963299,
+        "narHash": "sha256-6G6Dn43eDqqYpP27AuXKgVU+zasernfnT4acZdmwwDc=",
         "owner": "bootdotdev",
         "repo": "bootdev",
-        "rev": "39741169f1c616271fd90da2773589aee3044e26",
+        "rev": "b199e908cdc09dc7a333727d74ecef76a026c3e6",
         "type": "github"
       },
       "original": {
