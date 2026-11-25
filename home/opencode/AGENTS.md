@@ -1,6 +1,7 @@
 ## General
 - You're running in NixOS, so if something isn't installed then first try to grab it from the nix store with `nix-shell -p <pkg>`
 - When reporting information to me, be extremely concise. Sacrifice grammar for the sake of concision. 
+- When I ask you to undo an AI-written change, and the mistake isn't obvious or already covered in AGENTS.md, suggest an AGENTS.md edit to prevent the same problem. Always ask permission before making the edit.
 
 ## Git Workflow
 - Never assume that you should stage or commit a change unless I ask you to. I like to review your changes unstaged.
