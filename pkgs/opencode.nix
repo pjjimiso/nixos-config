@@ -37,9 +37,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     # v2 was trialled side by side with v1 pointed at opencode2.db, so keep it there:
     # that preserves the trial's sessions and leaves both v1 files untouched. A bare
     # filename resolves inside the data dir.
+    # Add Ctrl+N to the default newline keys while keeping each host's cli.json writable.
     makeBinaryWrapper $out/libexec/opencode/opencode $out/bin/opencode \
       --prefix PATH : ${lib.makeBinPath [ ripgrep ]} \
       --set OPENCODE_DISABLE_AUTOUPDATE true \
+      --set-default OPENCODE_CLI_CONFIG_CONTENT '${builtins.toJSON {
+        keybinds."input.newline" = [ "ctrl+n" "shift+return" "ctrl+return" "alt+return" "ctrl+j" ];
+      }}' \
       --set-default OPENCODE_DB opencode2.db
 
     runHook postInstall
